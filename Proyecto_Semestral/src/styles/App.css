@@ -1,0 +1,63 @@
+/* App.css */
+
+/* Fondo general de la aplicación */
+.weather-app {
+  background: linear-gradient(to bottom right, #3b82f6, #9333ea);
+  min-height: 100vh;
+  padding: 1.5rem;
+  color: white;
+}
+
+/* Contenedor del clima y pronóstico */
+.weather-container {
+  max-width: 40rem;
+  margin: 0 auto;
+  background: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  color: #333;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Título */
+.weather-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+/* Contenedor de la ciudad */
+.city-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Estilo para el botón de agregar a favoritos */
+.favorite-button {
+  color: #6366f1;
+  text-decoration: underline;
+}
+
+/* Estilos del clima y pronóstico */
+.weather-info {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+/* Estilos para el pronóstico y el mapa */
+.forecast-grid,
+.map-view {
+  margin-top: 1.5rem;
+}
+
+/* Mensajes de carga y error */
+.loading-message,
+.error-message {
+  text-align: center;
+}
+.error-message {
+  color: #f87171; /* Color de error */
+}

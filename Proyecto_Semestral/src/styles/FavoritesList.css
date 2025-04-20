@@ -1,0 +1,26 @@
+.favorites-list {
+    margin-top: 1.5rem;
+  }
+  
+  .favorites-list ul {
+    padding: 0;
+    list-style-type: none;
+  }
+  
+  .favorites-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+  }
+  
+  .favorites-list li .favorite-city {
+    cursor: pointer;
+    color: #3490dc;
+    text-decoration: underline;
+  }
+  
+  .favorites-list li .remove-button {
+    color: #e53e3e;
+    font-size: 0.9rem;
+  }
+  
