@@ -7,7 +7,7 @@ import FavoritesList from "./components/FavoritesList";
 import Loading from "./components/Loading";  // Importamos el componente de carga
 import ErrorMessage from "./components/ErrorMessage";  // Importamos el componente de error
 import WeatherDetails from "./components/WeatherDetails";  // Importamos el componente de detalles del clima
-import { fetchWeather, fetchForecast } from "./services/weatherService";
+import { fetchWeather, fetchForecast } from "./services/weatherService"; // Importar la funcion de busqueda del clima
 import useFavorites from "./hooks/useFavorites"; // Importamos el hook para favoritos
 import './styles/App.css';
 
