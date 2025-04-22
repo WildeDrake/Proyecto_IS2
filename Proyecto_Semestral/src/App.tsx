@@ -9,6 +9,9 @@ import ErrorMessage from "./components/ErrorMessage";  // Importamos el componen
 import WeatherDetails from "./components/WeatherDetails";  // Importamos el componente de detalles del clima
 import { fetchWeather, fetchForecast } from "./services/weatherService";
 import useFavorites from "./hooks/useFavorites"; // Importamos el hook para favoritos
+
+import UbicacionActual from "./components/ubicacionActual.tsx";
+
 import './styles/App.css';
 
 const WeatherApp: React.FC = () => {
@@ -41,7 +44,8 @@ const WeatherApp: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-500 to-purple-600 p-6 text-white">
       <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-2xl p-6 text-gray-800">
         <h1 className="text-2xl font-bold mb-4 text-center">🌦️ Clima y Pronóstico</h1>
-
+        <UbicacionActual /> {/* Componente para mostrar la ubicación actual */}
+        
         <SearchBar city={city} setCity={setCity} fetchWeather={handleFetchWeather} />
 
         {loading && <Loading />}  {/* Usamos el componente Loading */}
@@ -63,7 +67,6 @@ const WeatherApp: React.FC = () => {
             <MapView weather={weather} />
           </div>
         )}
-
         <FavoritesList
           favorites={favorites}
           fetchWeather={handleFetchWeather}
