@@ -9,9 +9,11 @@ const WeatherDetails: React.FC<{ weather: WeatherData }> = ({ weather }) => {
       />
       <div>
         <p className="capitalize">{weather.weather[0].description}</p>
-        <p className="text-2xl font-bold">{weather.main.temp}°C</p>
-        <p>Humedad: {weather.main.humidity}%</p>
-        <p>Viento: {weather.wind.speed} m/s</p>
+        <p className="text-2xl font-bold">
+          La temperatura actual es de: {weather.main.temp}°C
+        </p>
+        <p>La humedad actual es de: {weather.main.humidity}%</p>
+        <p>Velocidad del viento: {weather.wind.speed} m/s</p>
       </div>
     </div>
   );
