@@ -23,11 +23,17 @@ a:hover {
 }
 
 body {
+  background-image: url('/fondo.jpg'); /* asegúrate de que esté en /public */
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   margin: 0;
   display: flex;
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  color: white;
 }
 
 h1 {

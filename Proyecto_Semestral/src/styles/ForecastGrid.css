@@ -1,19 +1,44 @@
+/* Contenedor del clima y pronóstico */
+.weather-container {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  color: white; /* Texto blanco */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Título */
+.weather-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  text-align: center;
+  color: white;
+}
+
+/* Forecast grid */
 .forecast-grid {
-    display: grid;
-    gap: 1rem;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    margin-top: 1.5rem;
-  }
-  
-  .forecast-grid .forecast-card {
-    background-color: #f3f4f6;
-    padding: 1rem;
-    border-radius: 8px;
-    text-align: center;
-  }
-  
-  .forecast-grid .forecast-card img {
-    max-width: 50px;
-    margin: 0.5rem 0;
-  }
-  
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  margin-top: 1.5rem;
+}
+
+.forecast-grid .forecast-card {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+  color: white; /* Texto blanco */
+}
+
+.forecast-grid .forecast-card img {
+  max-width: 50px;
+  margin: 0.5rem 0;
+}

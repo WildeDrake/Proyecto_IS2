@@ -25,6 +25,7 @@
   font-weight: bold;
   margin-bottom: 1rem;
   text-align: center;
+  color: white;
 }
 
 /* Contenedor de la ciudad */
@@ -32,6 +33,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  color: white;
 }
 
 /* Estilo para el botón de agregar a favoritos */
@@ -45,12 +47,14 @@
   display: flex;
   gap: 1rem;
   align-items: center;
+  color: white;
 }
 
 /* Estilos para el pronóstico y el mapa */
 .forecast-grid,
 .map-view {
   margin-top: 1.5rem;
+  color: white;
 }
 
 /* Mensajes de carga y error */
