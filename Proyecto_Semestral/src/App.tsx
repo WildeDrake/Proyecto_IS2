@@ -3,6 +3,7 @@ import { WeatherData, ForecastData } from "./types/weather";
 import MapView from "./components/MapView";
 import ForecastGrid from "./components/ForecastGrid";
 import SearchBar from "./components/SearchBar";
+import UbicacionActual from "./components/ubicacionActual.tsx";
 import FavoritesList from "./components/FavoritesList";
 import Loading from "./components/Loading";  // Importamos el componente de carga
 import ErrorMessage from "./components/ErrorMessage";  // Importamos el componente de error
@@ -42,6 +43,7 @@ const WeatherApp: React.FC = () => {
       <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-2xl p-6 text-gray-800">
         <h1 className="text-2xl font-bold mb-4 text-center">🌦️ Clima y Pronóstico</h1>
 
+        <UbicacionActual /> {/* Componente para mostrar la ubicación actual */}
         <SearchBar city={city} setCity={setCity} fetchWeather={handleFetchWeather} />
 
         {loading && <Loading />}  {/* Usamos el componente Loading */}
