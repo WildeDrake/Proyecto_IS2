@@ -1,3 +1,4 @@
+*.Zone.Identifier
 # Archivos de log
 logs
 *.log
