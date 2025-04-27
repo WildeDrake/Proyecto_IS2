@@ -1,0 +1,266 @@
+/* Estilos generales */
+.landing-page {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Header con información del clima */
+.weather-header {
+  height: 400px;
+  background-image: url('/treking.jpg');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.weather-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.weather-info {
+  text-align: center;
+  position: relative;
+  z-index: 2;
+  color: white;
+  background-color: rgba(128, 128, 128, 0.5);
+  padding: 30px 50px;
+  border-radius: 12px;
+}
+
+.weather-info h1 {
+  font-size: 48px;
+  margin-bottom: 10px;
+}
+
+.day-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.day {
+  font-size: 24px;
+  margin-bottom: 5px;
+}
+
+.temperature {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.date {
+  font-size: 16px;
+}
+
+/* Sección de actividades */
+.activities-section {
+  background-color: #063612;
+  color: white;
+  padding: 30px 20px;
+}
+
+.activities-section h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 24px;
+}
+
+.activities-grid {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.activity-card {
+  width: 180px;
+  overflow: hidden;
+  border-radius: 10px;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+}
+
+.activity-card:hover {
+  transform: translateY(-5px);
+}
+
+.activity-card img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+}
+
+.activity-card p {
+  color: #333;
+  text-align: center;
+  padding: 10px 0;
+  font-weight: 500;
+}
+
+/* formulario para registrarse */
+.registration-section {
+  padding: 50px 20px;
+  background-color: #f9f9f9;
+  text-align: center;
+}
+
+.registration-section h2 {
+  margin-bottom: 30px;
+  font-size: 24px;
+}
+
+form {
+  max-width: 500px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+label {
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #555;
+}
+
+input {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.interests-options {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.interests-options button {
+  padding: 8px 15px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #333;
+}
+
+.interests-options button.selected {
+  background-color: #639970;
+  color: white;
+  border-color: #063612;
+}
+
+.submit-button {
+  background-color: #000;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 10px;
+}
+
+.submit-button:hover {
+  background-color: #333;
+}
+
+/* La barra gris de abajo en la pagina */
+footer {
+  background-color: #f0f0f0;
+  padding: 30px 20px;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.footer-column {
+  flex: 1;
+}
+
+.footer-column p:first-child {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.footer-column p {
+  margin: 5px 0;
+  color: #555;
+}
+
+@media (max-width: 768px) {
+  .weather-info h1 {
+    font-size: 36px;
+  }
+  
+  .activities-grid {
+    gap: 10px;
+  }
+  
+  .activity-card {
+    width: 150px;
+  }
+  
+  .footer-links {
+    flex-direction: column;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .weather-info {
+    padding: 20px;
+  }
+  
+  .weather-info h1 {
+    font-size: 28px;
+  }
+  
+  .day {
+    font-size: 20px;
+  }
+  
+  .temperature {
+    font-size: 26px;
+  }
+  
+  .activities-grid {
+    justify-content: center;
+  }
+  
+  .activity-card {
+    width: 130px;
+  }
+}
