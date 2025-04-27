@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/LandingPage.css';
 import { WeatherData, ForecastData } from "../types/weather";
 import MapView from "../components/MapView";
@@ -10,6 +10,7 @@ import UbicacionActual from "./ubicacionActual";
 import ErrorMessage from "./ErrorMessage";
 import Loading from "./Loading";
 import { fetchWeather, fetchForecast } from "../services/weatherService";
+import { Geolocalizar } from "../services/Geolocalizar";
 import useFavorites from "../hooks/useFavorites";
 
 interface LandingPageProps {
@@ -24,6 +25,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
   
   // Estados para la funcionalidad del clima
   const [city, setCity] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [forecast, setForecast] = useState<ForecastData | null>(null);
   const [loading, setLoading] = useState(false);
@@ -49,6 +51,26 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
     { id: 5, image: '/activities/ski.jpg', alt: 'Esquí' },
   ];
 
+  // Efecto para cargar el clima de la ubicación actual al iniciar
+  useEffect(() => {
+    const loadLocalWeather = async () => {
+      try {
+        setLoading(true);
+        // Obtener ubicación actual
+        const ubicacion = await Geolocalizar();
+        
+        // Buscar clima por coordenadas (usaremos la ciudad de "Concepción" como valor inicial)
+        await handleFetchWeather("Concepción");
+      } catch (err) {
+        console.error("No se pudo cargar el clima local:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadLocalWeather();
+  }, []);
+
   const handleInterestToggle = (interest: string) => {
     if (selectedInterests.includes(interest)) {
       setSelectedInterests(selectedInterests.filter(i => i !== interest));
@@ -63,6 +85,14 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
     alert('¡Gracias por registrarte! Recibirás recomendaciones personalizadas pronto.');
   };
 
+  // Manejador de búsqueda para el navbar
+  const handleNavbarSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      handleFetchWeather(searchQuery);
+    }
+  };
+
   // Función para obtener el clima
   const handleFetchWeather = async (cityName: string) => {
     setLoading(true);
@@ -73,6 +103,9 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
       const forecastData = await fetchForecast(weatherData.name);
       setForecast(forecastData);
       setShowWeatherDetails(true);
+      
+      // Actualizar la temperatura en la tarjeta principal
+      // Actualizamos el nombre de la ciudad en caso que sea diferente
       
       // Si existe el callback del componente padre, también lo llamamos
       if (onWeatherSearch) {
@@ -91,10 +124,15 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
       {/* Navbar */}
       <nav className="navbar">
         <div className="navbar-brand">Nombre página</div>
-        <div className="search-container">
-          <input type="text" placeholder="Search..." />
-          <button className="search-button">🔍</button>
-        </div>
+        <form className="search-container" onSubmit={handleNavbarSearch}>
+          <input 
+            type="text" 
+            placeholder="Buscar ciudad..." 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <button type="submit" className="search-button">🔍</button>
+        </form>
         <div className="navbar-actions">
           <button className="btn-login">Iniciar sesión</button>
           <button className="btn-account">
@@ -108,19 +146,22 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
       {/* Hero Section con información del clima */}
       <div className="hero-section">
         <div className="weather-card">
-          <h1>Concepción</h1>
+          <h1>{weather ? weather.name : "Cargando..."}</h1>
           <div className="weather-info">
             <div>
               <p className="day">{dayName}</p>
-              <p className="temperature">18°C</p>
+              <p className="temperature">{weather ? `${Math.round(weather.main.temp)}°C` : "18°C"}</p>
               <p className="date">{dateString}</p>
+              {weather && weather.weather && weather.weather[0] && (
+                <p className="weather-description">{weather.weather[0].description}</p>
+              )}
             </div>
           </div>
         </div>
       </div>
 
-      {/* SearchBar para clima (puede estar oculto inicialmente) */}
-      <div className={`weather-search-container ${showWeatherDetails ? '' : 'hidden'}`}>
+      {/* SearchBar para clima (siempre visible pero con estilo diferente) */}
+      <div className="weather-search-container">
         <SearchBar city={city} setCity={setCity} fetchWeather={handleFetchWeather} />
       </div>
       
@@ -128,8 +169,13 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
       {loading && <Loading />}
       {error && <ErrorMessage message={error} />}
 
+      {/* Ubicación Actual */}
+      <div className="location-container">
+        <UbicacionActual />
+      </div>
+
       {/* Sección de detalles del clima (visible solo después de buscar) */}
-      {showWeatherDetails && weather && (
+      {weather && (
         <div className="weather-details-container">
           <div className="weather-details-header">
             <h2>{weather.name}</h2>

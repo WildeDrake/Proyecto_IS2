@@ -137,6 +137,12 @@ body {
   font-size: 16px;
 }
 
+.weather-description {
+  margin-top: 5px;
+  font-style: italic;
+  text-transform: capitalize;
+}
+
 /* Ocultar elementos */
 .hidden {
   display: none;
@@ -146,6 +152,13 @@ body {
 .weather-search-container {
   padding: 20px;
   background-color: #f8f9fa;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+/* Componente de ubicación actual */
+.location-container {
+  padding: 0 20px;
   margin-bottom: 20px;
 }
 
