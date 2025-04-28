@@ -14,6 +14,7 @@ import './styles/App.css';
 
 const WeatherApp: React.FC = () => {
   const [city, setCity] = useState("");
+  const [country, setCountry] = useState(""); // Nuevo estado para el país
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [forecast, setForecast] = useState<ForecastData | null>(null);
   const [loading, setLoading] = useState(false);
@@ -22,11 +23,11 @@ const WeatherApp: React.FC = () => {
   const { favorites, addFavorite, removeFavorite } = useFavorites(); // Usamos el hook de favoritos
 
   // Función para obtener el clima y pronóstico
-  const handleFetchWeather = async (cityName: string) => {
+  const handleFetchWeather = async (cityName: string, countryName: string) => {
     setLoading(true);
     setError("");
     try {
-      const weatherData = await fetchWeather(cityName);
+      const weatherData = await fetchWeather(cityName, countryName); // Pasa ciudad y país
       setWeather(weatherData);
       const forecastData = await fetchForecast(weatherData.name);
       setForecast(forecastData);
@@ -44,7 +45,13 @@ const WeatherApp: React.FC = () => {
         <h1 className="text-2xl font-bold mb-4 text-center">🌦️ Clima y Pronóstico</h1>
 
         <UbicacionActual /> {/* Componente para mostrar la ubicación actual */}
-        <SearchBar city={city} setCity={setCity} fetchWeather={handleFetchWeather} />
+        <SearchBar
+        city={city}
+        setCity={setCity}
+        country={country}
+        setCountry={setCountry}
+        fetchWeather={handleFetchWeather}
+      />
 
         {loading && <Loading />}  {/* Usamos el componente Loading */}
         {error && <ErrorMessage message={error} />}  {/* Usamos el componente ErrorMessage */}
