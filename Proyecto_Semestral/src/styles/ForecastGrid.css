@@ -6,7 +6,7 @@
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 1rem;
   padding: 1.5rem;
-  color: white; /* Texto blanco */
+  color: white;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
@@ -19,26 +19,70 @@
   color: white;
 }
 
-/* Forecast grid */
-.forecast-grid {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  margin-top: 1.5rem;
+/* Contenedor principal del pronóstico */
+.forecast-section {
+  margin: 2rem 0;
+  padding: 2rem;
+  background-image: url('/Bosque.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 1rem;
 }
 
-.forecast-grid .forecast-card {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 1rem;
-  border-radius: 8px;
+/* Título */
+.forecast-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
   text-align: center;
-  color: white; /* Texto blanco */
+  margin-bottom: 1.5rem;
 }
 
-.forecast-grid .forecast-card img {
-  max-width: 50px;
+/* Contenedor de tarjetas en fila */
+.forecast-grid {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Estilo de cada tarjeta */
+.forecast-card {
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  width: 140px;
+  text-align: center;
+  color: #333;
+}
+
+/* Icono del clima */
+.forecast-card img {
+  width: 60px;
+  height: 60px;
   margin: 0.5rem 0;
+}
+
+/* Fecha */
+.forecast-date {
+  font-size: 0.95rem;
+  font-weight: bold;
+  margin-bottom: 0.3rem;
+}
+
+/* Temperatura */
+.forecast-temp {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 0.2rem;
+}
+
+/* Descripción del clima */
+.forecast-description {
+  font-size: 0.9rem;
+  color: #555;
 }

@@ -1,5 +1,6 @@
 import React from "react";
 import '../styles/MapView.css';
+import { WeatherData } from '../types/weather';
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 
 interface MapViewProps {

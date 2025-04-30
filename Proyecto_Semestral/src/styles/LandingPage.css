@@ -121,6 +121,14 @@ body {
   flex-direction: column;
   align-items: center;
 }
+.weather-background {
+  background-image: url('/Bosque.jpg'); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 2rem 0;
+  border-radius: 1rem;
+}
 
 .day {
   font-size: 20px;

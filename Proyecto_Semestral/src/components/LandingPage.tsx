@@ -100,6 +100,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
     try {
       const weatherData = await fetchWeather(cityName);
       setWeather(weatherData);
+      console.log("Pronóstico desde LandingPage:", forecast);
       const forecastData = await fetchForecast(weatherData.name);
       setForecast(forecastData);
       setShowWeatherDetails(true);
@@ -180,7 +181,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
           <div className="weather-details-header">
             <h2>{weather.name}</h2>
             <button onClick={() => addFavorite(weather.name)} className="favorite-button">
-              Guardar como favorita ⭐
+              
             </button>
           </div>
           
