@@ -177,27 +177,52 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
 
       {/* Sección de detalles del clima (visible solo después de buscar) */}
       {weather && (
-        <div className="weather-details-container">
+        <div className="weather-section">
           <div className="weather-details-header">
             <h2>{weather.name}</h2>
             <button onClick={() => addFavorite(weather.name)} className="favorite-button">
-              
+              Guardar como favorita ⭐
             </button>
           </div>
-          
-          <WeatherDetails weather={weather} />
+
+         <WeatherDetails weather={weather} />
+
+         <div className="panorama-section">
+          <div className="panorama-grid">
+            <div className="panorama-card">
+              <img src="/panorama/futbol.jpg" alt="Fútbol" />
+            </div>
+            <div className="panorama-card">
+              <img src="/panorama/trote.jpg" alt="Trote" />
+            </div>
+            <div>
+
+              <h2 className="panorama-title">¡Planifica tus días según el clima!</h2>
+
+            </div>
+            <div className="panorama-card">
+              <img src="/panorama/auto.jpg" alt="Auto" />
+            </div>
+            <div className="panorama-card">
+              <img src="/panorama/caafe.jpg" alt="Café" />
+            </div>
+          </div>
+        </div>
+
           {forecast && <ForecastGrid forecast={forecast} />}
           <MapView weather={weather} />
-          
+
           <div className="weather-favorites-container">
             <FavoritesList
               favorites={favorites}
               fetchWeather={handleFetchWeather}
               removeFavorite={removeFavorite}
-            />
+           />
           </div>
         </div>
       )}
+
+
 
       {/* Sección de actividades recomendadas */}
       <div className="activities-section">

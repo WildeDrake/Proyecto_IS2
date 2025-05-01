@@ -1,10 +1,38 @@
 import React from "react";
+import {
+  WiDaySunny,
+  WiDayCloudy,
+  WiCloudy,
+  WiRain,
+  WiShowers,
+  WiThunderstorm,
+  WiSnow,
+  WiFog,
+  WiStrongWind,
+} from 'react-icons/wi';
+
 import { ForecastData } from "../types/weather";
 import "../styles/ForecastGrid.css";
+
 
 interface ForecastGridProps {
   forecast: ForecastData | null;
 }
+const getWeatherIcon = (main: string, description: string) => {
+  const key = `${main.toLowerCase()}-${description.toLowerCase()}`;
+  if (key.includes("clear")) return <WiDaySunny size={40} />;
+  if (key.includes("clouds") && key.includes("few")) return <WiDayCloudy size={40} />;
+  if (key.includes("clouds")) return <WiCloudy size={40} />;
+  if (key.includes("rain") && key.includes("light")) return <WiShowers size={40} />;
+  if (key.includes("rain")) return <WiRain size={40} />;
+  if (key.includes("thunderstorm")) return <WiThunderstorm size={40} />;
+  if (key.includes("snow")) return <WiSnow size={40} />;
+  if (key.includes("fog") || key.includes("mist") || key.includes("haze")) return <WiFog size={40} />;
+  if (key.includes("wind")) return <WiStrongWind size={40} />;
+
+  return <WiCloudy size={40} />;
+};
+
 
 const ForecastGrid: React.FC<ForecastGridProps> = ({ forecast }) => {
   if (!forecast || !forecast.list || forecast.list.length === 0) {
@@ -35,10 +63,10 @@ const ForecastGrid: React.FC<ForecastGridProps> = ({ forecast }) => {
             <p className="forecast-date">
               {new Date(f.dt_txt).toLocaleDateString('es-ES', { weekday: 'long' }).replace(/^\w/, c => c.toUpperCase())}<br />
               {new Date(f.dt_txt).toLocaleDateString()}</p>
-            <img
-              src={`https://openweathermap.org/img/wn/${f.weather[0].icon}.png`}
-              alt={f.weather[0].description}
-            />
+              <div className="weather-icon">
+                 {getWeatherIcon(f.weather[0].main, f.weather[0].description)}
+                 </div>
+
             <p className="forecast-description">{f.weather[0].description}</p>
             <p className="forecast-temp">{f.main.temp}°C</p>
           </div>

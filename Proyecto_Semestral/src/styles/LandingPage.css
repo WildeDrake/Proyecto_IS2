@@ -121,14 +121,6 @@ body {
   flex-direction: column;
   align-items: center;
 }
-.weather-background {
-  background-image: url('/Bosque.jpg'); 
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  padding: 2rem 0;
-  border-radius: 1rem;
-}
 
 .day {
   font-size: 20px;
@@ -178,6 +170,16 @@ body {
   margin: 0 20px 30px;
   border-radius: 8px;
 }
+.weather-section {
+  background-image: url('/Bosque.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 2rem;
+  border-radius: 1rem;
+  color: black(10, 10, 10);
+}
+
 
 .weather-details-header {
   display: flex;
@@ -198,6 +200,36 @@ body {
   margin-top: 20px;
   padding-top: 20px;
   border-top: 1px solid #eee;
+}
+.panorama-section {
+  background-color: #024864;
+  padding: 2rem 0;
+  text-align: center;
+  color: white;
+  box-sizing: border-box;
+  margin: 2rem 0;
+}
+
+.panorama-title {
+  font-size: 1.7rem;
+  font-weight: bold;
+  margin: 2rem 0;
+}
+
+.panorama-grid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4rem;
+  flex-wrap: wrap;
+}
+
+.panorama-card img {
+  width: 160px;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(31, 78, 67, 0.3);
 }
 
 /* Sección de actividades */

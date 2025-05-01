@@ -9,6 +9,12 @@
   color: white;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
+.weather-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0.5rem 0;
+}
 
 /* Título */
 .weather-title {
@@ -21,13 +27,18 @@
 
 /* Contenedor principal del pronóstico */
 .forecast-section {
-  margin: 2rem 0;
+  margin: 1rem auto;
   padding: 2rem;
-  background-image: url('/Bosque.jpg');
+  border: 2px solid rgba(20, 1, 1, 0.4); 
+  max-width: 75%;
+  border-radius: 1rem; 
+  background: rgba(255, 255, 255, 0.1); 
+  backdrop-filter: blur(8px); 
+  /*background-image: url('/Bosque.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  border-radius: 1rem;
+  border-radius: 1rem;*/
 }
 
 /* Título */
