@@ -231,6 +231,9 @@ body {
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(31, 78, 67, 0.3);
 }
+.panorama-card img:hover {
+  transform: scale(1.05); /* agranda la imagen un poco cuando el mouse pasa encima */
+}
 
 /* Sección de actividades */
 .activities-section {

@@ -50,6 +50,20 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
     { id: 4, image: '/activities/ciclismo.jpg', alt: 'Ciclismo' },
     { id: 5, image: '/activities/ski.jpg', alt: 'Esquí' },
   ];
+  const [userCoords, setUserCoords] = useState<[number, number] | null>(null);
+
+useEffect(() => {
+  const getCoords = async () => {
+    try {
+      const ubicacion = await Geolocalizar(); // Tu función personalizada
+      setUserCoords([ubicacion.lat, ubicacion.lon]);
+    } catch (error) {
+      console.error("No se pudo obtener la ubicación del usuario");
+    }
+  };
+  getCoords();
+}, []);
+
 
   // Efecto para cargar el clima de la ubicación actual al iniciar
   useEffect(() => {
@@ -57,8 +71,6 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
       try {
         setLoading(true);
         // Obtener ubicación actual
-        const ubicacion = await Geolocalizar();
-        
         // Buscar clima por coordenadas (usaremos la ciudad de "Concepción" como valor inicial)
         await handleFetchWeather("Concepción");
       } catch (err) {
@@ -210,7 +222,9 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
         </div>
 
           {forecast && <ForecastGrid forecast={forecast} />}
-          <MapView weather={weather} />
+          
+          <MapView weather={weather} userCoords={userCoords} />
+
 
           <div className="weather-favorites-container">
             <FavoritesList
