@@ -236,10 +236,15 @@ body {
 }
 
 /* Sección de actividades */
+
+.activities-section img:hover {
+  transform: scale(1.05); /* agranda la imagen un poco cuando el mouse pasa encima */
+}
+
 .activities-section {
   padding: 40px 20px;
   background-color: #063612;
-  color: white;
+  color: #AFDBD3;
   text-align: center;
 }
 
@@ -258,18 +263,15 @@ body {
 }
 
 .activity-card {
-  width: 180px;
-  height: 120px;
-  overflow: hidden;
-  border-radius: 10px;
-  background-color: #fff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 200px;
+  height: 270px;
 }
 
 .activity-card img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 15px;
 }
 
 /* Sección de registro */
@@ -335,6 +337,7 @@ form {
   padding: 8px 16px;
   background-color: white;
   border: 1px solid #ddd;
+  color: #666;
   border-radius: 20px;
   cursor: pointer;
 }
