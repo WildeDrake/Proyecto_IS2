@@ -326,25 +326,25 @@ useEffect(() => {
       {/* Footer */}
       <footer>
         <div className="footer-content">
-          <div className="footer-brand">Nombre página</div>
+          <div className="footer-brand">¿Quieres saber quiénes somos y más sobre nosotros?.... ¡Contáctanos!</div>
           <div className="footer-links">
             <div className="footer-column">
-              <p className="footer-title">Topic</p>
-              <p>Page</p>
-              <p>Page</p>
-              <p>Page</p>
+              <p className="footer-title">Telefono(s)</p>
+              <p>(41) 64536...</p>
+              <p>(+56) 967584...</p>
+              <p>(+56) 965745...</p>
             </div>
             <div className="footer-column">
-              <p className="footer-title">Topic</p>
-              <p>Page</p>
-              <p>Page</p>
-              <p>Page</p>
+              <p className="footer-title">Correos y contactos</p>
+              <p>correoConsultas@...</p>
+              <p>correoTrabajo@...</p>
+              <p>Whatsaap 98464..</p>
             </div>
             <div className="footer-column">
-              <p className="footer-title">Topic</p>
-              <p>Page</p>
-              <p>Page</p>
-              <p>Page</p>
+              <p className="footer-title">Visita nuestras redes sociales</p>
+              <p>@instragram...</p>
+              <p>@facebook...</p>
+              <p>@twitter...</p>
             </div>
           </div>
           <div className="footer-social">
