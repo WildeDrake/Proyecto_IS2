@@ -25,7 +25,9 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
   
   // Estados para la funcionalidad del clima
   const [city, setCity] = useState("");
+  const [country, setCountry] = useState(""); // Nuevo estado para el país
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchCountry, setSearchCountry] = useState(""); // Nuevo estado para búsqueda en navbar
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [forecast, setForecast] = useState<ForecastData | null>(null);
   const [loading, setLoading] = useState(false);
@@ -72,7 +74,7 @@ useEffect(() => {
         setLoading(true);
         // Obtener ubicación actual
         // Buscar clima por coordenadas (usaremos la ciudad de "Concepción" como valor inicial)
-        await handleFetchWeather("Concepción");
+        await handleFetchWeather("Concepción", "");
       } catch (err) {
         console.error("No se pudo cargar el clima local:", err);
       } finally {
@@ -101,16 +103,16 @@ useEffect(() => {
   const handleNavbarSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      handleFetchWeather(searchQuery);
+      handleFetchWeather(searchQuery, searchCountry);
     }
   };
 
   // Función para obtener el clima
-  const handleFetchWeather = async (cityName: string) => {
+  const handleFetchWeather = async (cityName: string, countryName: string) => {
     setLoading(true);
     setError("");
     try {
-      const weatherData = await fetchWeather(cityName);
+      const weatherData = await fetchWeather(cityName, countryName);
       setWeather(weatherData);
       console.log("Pronóstico desde LandingPage:", forecast);
       const forecastData = await fetchForecast(weatherData.name);
@@ -144,6 +146,13 @@ useEffect(() => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
+          <input 
+            type="text" 
+            placeholder="País (ej: CL, US)" 
+            value={searchCountry}
+            onChange={(e) => setSearchCountry(e.target.value)}
+            maxLength={2}
+          />
           <button type="submit" className="search-button">🔍</button>
         </form>
         <div className="navbar-actions">
@@ -175,7 +184,13 @@ useEffect(() => {
 
       {/* SearchBar para clima (siempre visible pero con estilo diferente) */}
       <div className="weather-search-container">
-        <SearchBar city={city} setCity={setCity} fetchWeather={handleFetchWeather} />
+        <SearchBar 
+          city={city} 
+          setCity={setCity}
+          country={country}
+          setCountry={setCountry} 
+          fetchWeather={handleFetchWeather}
+        />
       </div>
       
       {/* Mostrar error o carga */}
@@ -227,9 +242,9 @@ useEffect(() => {
 
 
           <div className="weather-favorites-container">
-            <FavoritesList
+          <FavoritesList
               favorites={favorites}
-              fetchWeather={handleFetchWeather}
+              fetchWeather={(cityName) => handleFetchWeather(cityName, "")}
               removeFavorite={removeFavorite}
            />
           </div>

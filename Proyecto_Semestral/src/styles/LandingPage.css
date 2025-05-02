@@ -460,3 +460,96 @@ footer {
     width: 130px;
   }
 }
+
+
+
+.location-container h2 {
+  font-size: 1.8rem;
+  color: #1a365d;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.location-container p {
+  font-size: 1.2rem;
+  color: #2d3748;
+  margin: 10px 0;
+  line-height: 1.5;
+}
+
+
+
+
+
+/* Estilos para los detalles del clima */
+.weather-section p {
+  font-size: 1.3rem;
+  margin: 12px 0;
+  color: #2d3748;
+  line-height: 1.6;
+}
+
+/* Temperatura actual */
+.weather-section p.text-2xl {
+  font-size: 2.2rem;
+  color: #2b6cb0;
+  font-weight: bold;
+  margin: 20px 0;
+}
+
+/* Descripción del clima */
+.weather-section p.capitalize {
+  font-size: 1.8rem;
+  color: #4a5568;
+  font-style: italic;
+  margin-bottom: 15px;
+}
+
+/* Recomendaciones */
+.weather-section p{
+  font-size: 1.4rem;
+  color: #2d3748;
+}
+
+/* Estilos específicos para las recomendaciones */
+.weather-section p:contains("Recomendación:") {
+  background-color: #ebf8ff;
+  padding: 15px;
+  border-radius: 10px;
+  border-left: 5px solid #4299e1;
+  margin: 15px 0;
+  font-size: 1.2rem;
+  color: #2c5282;
+}
+
+/* Iconos del clima */
+.weather-section img {
+  width: 100px;
+  height: 100px;
+  margin: 10px 0;
+  background-color: rgba(128, 128, 128, 0.7);  /* Gris translúcido */
+  padding: 10px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+
+/* Responsive */
+@media (max-width: 768px) {
+  .weather-section {
+    padding: 1.5rem;
+    margin: 10px;
+  }
+
+  .weather-details-header h2 {
+    font-size: 2rem;
+  }
+
+  .weather-section p.text-2xl {
+    font-size: 1.8rem;
+  }
+
+  .weather-section p {
+    font-size: 1.1rem;
+  }
+}
