@@ -12,6 +12,8 @@ import Loading from "./Loading";
 import { fetchWeather, fetchForecast } from "../services/weatherService";
 import { Geolocalizar } from "../services/Geolocalizar";
 import useFavorites from "../hooks/useFavorites";
+import LoginForm from './LoginForm';
+import RegisterForm from './RegisterForm';
 
 interface LandingPageProps {
   onWeatherSearch?: (city: string) => void;
@@ -35,6 +37,13 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
   const [showWeatherDetails, setShowWeatherDetails] = useState(false);
   
   const { favorites, addFavorite, removeFavorite } = useFavorites();
+
+  const [showAuthModal, setShowAuthModal] = useState<boolean>(false);
+  const [isLogin, setIsLogin] = useState<boolean>(true);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    // Verificar si hay un token guardado
+    return !!localStorage.getItem('token');
+  });
 
   // Obtener fecha actual
   const today = new Date();
@@ -134,6 +143,15 @@ useEffect(() => {
     }
   };
 
+  const handleAuthSuccess = () => {
+    setIsAuthenticated(true);
+    setShowAuthModal(false);
+  };
+
+  const toggleAuthForm = () => {
+    setIsLogin(!isLogin);
+  };
+
   return (
     <div className="landing-page">
       {/* Navbar */}
@@ -156,11 +174,20 @@ useEffect(() => {
           <button type="submit" className="search-button">🔍</button>
         </form>
         <div className="navbar-actions">
-          <button className="btn-login">Iniciar sesión</button>
-          <button className="btn-account">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z" fill="currentColor"/>
-            </svg>
+          <button 
+            className="btn-login" 
+            onClick={() => {
+              console.log('Botón clickeado'); // Debug
+              if (isAuthenticated) {
+                localStorage.removeItem('token');
+                setIsAuthenticated(false);
+              } else {
+                setShowAuthModal(true);
+                setIsLogin(true);
+              }
+            }}
+          >
+            {isAuthenticated ? 'Cerrar Sesión' : 'Iniciar Sesión'}
           </button>
         </div>
       </nav>
@@ -355,6 +382,43 @@ useEffect(() => {
           </div>
         </div>
       </footer>
+
+      {showAuthModal && (
+        <div 
+          className="modal-overlay" 
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setShowAuthModal(false);
+            }
+          }}
+        >
+          <div className="modal-content">
+            <button 
+              className="modal-close" 
+              onClick={() => setShowAuthModal(false)}
+            >
+              ×
+            </button>
+            {isLogin ? (
+              <LoginForm 
+                onSuccess={() => {
+                  handleAuthSuccess();
+                  setShowAuthModal(false);
+                }} 
+                onToggleForm={toggleAuthForm} 
+              />
+            ) : (
+              <RegisterForm 
+                onSuccess={() => {
+                  handleAuthSuccess();
+                  setShowAuthModal(false);
+                }} 
+                onToggleForm={toggleAuthForm} 
+              />
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

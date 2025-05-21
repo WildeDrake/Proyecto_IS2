@@ -14,7 +14,7 @@ interface WeatherIconProps {
 }
 
 const WeatherIcon: React.FC<WeatherIconProps> = ({ main, size = 48 }) => {
-  const iconMap: Record<string, JSX.Element> = {
+  const iconMap: Record<string, React.JSX.Element> = {
     Clear: <WiDaySunny size={size} />,
     Clouds: <WiCloud size={size} />,
     Rain: <WiRain size={size} />,
