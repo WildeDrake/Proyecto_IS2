@@ -37,12 +37,6 @@ const UbicacionActual: React.FC = () => {
 
       {error && <p className="text-red-500 mb-2">{error}</p>}
 
-      {ubicacion && (
-        <p className="mb-1">
-          Latitud: {ubicacion.lat}, Longitud: {ubicacion.lon}
-        </p>
-      )}
-
       {direccion && <p className="mb-2">Dirección: {direccion}</p>}
 
       {cargando && <p className="text-blue-500">Obteniendo ubicación...</p>}

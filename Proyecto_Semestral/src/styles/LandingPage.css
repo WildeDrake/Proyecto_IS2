@@ -1,0 +1,570 @@
+/* Reset básico y estilos generales */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.landing-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Barra de navegación */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.navbar-brand {
+  font-weight: 500;
+  font-size: 18px;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.search-container input {
+  padding: 6px 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 200px;
+  background-color: white;
+  color: #333;
+}
+
+.search-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  right: 5px;
+}
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.btn-login {
+  background: none;
+  border: 2px solid #333;
+  color: #333;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.btn-login:hover {
+  background-color: #333;
+  color: white;
+}
+
+.btn-account {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Hero Section con clima */
+.hero-section {
+  height: 400px;
+  background-image: url('/treking.jpg');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.weather-card {
+  background-color: rgba(128, 128, 128, 0.6);
+  padding: 30px 50px;
+  text-align: center;
+  color: white;
+  border-radius: 8px;
+  position: relative;
+  z-index: 2;
+  backdrop-filter: blur(5px);
+}
+
+.weather-card h1 {
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+
+.weather-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.day {
+  font-size: 20px;
+  margin-bottom: 5px;
+}
+
+.temperature {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.date {
+  font-size: 16px;
+}
+
+.weather-description {
+  margin-top: 5px;
+  font-style: italic;
+  text-transform: capitalize;
+}
+
+/* Ocultar elementos */
+.hidden {
+  display: none;
+}
+
+/* Búsqueda de clima */
+.weather-search-container {
+  padding: 20px;
+  background-color: #f8f9fa;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+/* Componente de ubicación actual */
+.location-container {
+  padding: 0 20px;
+  margin-bottom: 20px;
+}
+
+/* Detalles del clima */
+.weather-details-container {
+  padding: 20px;
+  background-color: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin: 0 20px 30px;
+  border-radius: 8px;
+}
+.weather-section {
+  background-image: url('/Bosque.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 2rem;
+  border-radius: 1rem;
+  color: black(10, 10, 10);
+}
+
+
+.weather-details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.favorite-button {
+  background-color: transparent;
+  color: #4285f4;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.weather-favorites-container {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+.panorama-section {
+  background-color: #024864;
+  padding: 2rem 0;
+  text-align: center;
+  color: white;
+  box-sizing: border-box;
+  margin: 2rem 0;
+}
+
+.panorama-title {
+  font-size: 1.7rem;
+  font-weight: bold;
+  margin: 2rem 0;
+}
+
+.panorama-grid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4rem;
+  flex-wrap: wrap;
+}
+
+.panorama-card img {
+  width: 160px;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(31, 78, 67, 0.3);
+}
+.panorama-card img:hover {
+  transform: scale(1.05); /* agranda la imagen un poco cuando el mouse pasa encima */
+}
+
+/* Sección de actividades */
+
+.activities-section img:hover {
+  transform: scale(1.05); /* agranda la imagen un poco cuando el mouse pasa encima */
+}
+
+.activities-section {
+  padding: 40px 20px;
+  background-color: #063612;
+  color: #AFDBD3;
+  text-align: center;
+}
+
+.activities-section h2 {
+  font-size: 24px;
+  margin-bottom: 30px;
+}
+
+.activities-grid {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 0 auto;
+  max-width: 1200px;
+  flex-wrap: wrap;
+}
+
+.activity-card {
+  width: 200px;
+  height: 270px;
+}
+
+.activity-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 15px;
+}
+
+/* Sección de registro */
+.registration-section {
+  padding: 50px 20px;
+  background-color: white;
+  text-align: center;
+}
+
+.registration-section h2 {
+  font-size: 24px;
+  margin-bottom: 30px;
+}
+
+form {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.form-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  flex: 1;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #666;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+  color: #333;
+}
+
+.form-interests {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.form-interests label {
+  display: block;
+  margin-bottom: 5px;
+  color: #666;
+}
+
+.interests-options {
+  display: flex;
+  gap: 10px;
+}
+
+.interests-options button {
+  padding: 8px 16px;
+  background-color: white;
+  border: 1px solid #ddd;
+  color: #666;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.interests-options button.selected {
+  background-color: #063612;
+  color: white;
+  border-color: #063612;
+}
+
+.submit-button {
+  background-color: black;
+  color: white;
+  border: none;
+  padding: 10px 30px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* Footer */
+footer {
+  background-color: #f5f5f5;
+  padding: 30px 20px;
+  margin-top: auto;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-brand { 
+  font-weight: 700;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  color: #072fe1;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.footer-column {
+  flex: 1;
+}
+
+.footer-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+
+}
+
+.footer-column p {
+  margin-bottom: 5px;
+  color: #666;
+}
+
+.footer-social {
+  display: flex;
+  gap: 15px;
+}
+
+.social-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  color: #666;
+  text-decoration: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .activities-grid {
+    gap: 10px;
+  }
+  
+  .activity-card {
+    width: 150px;
+  }
+  
+  .footer-links {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .weather-card h1 {
+    font-size: 36px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .search-container input {
+    width: 150px;
+  }
+  
+  .weather-card {
+    padding: 20px;
+  }
+  
+  .weather-card h1 {
+    font-size: 28px;
+  }
+  
+  .activities-grid {
+    justify-content: center;
+  }
+  
+  .activity-card {
+    width: 130px;
+  }
+}
+
+
+
+.location-container h2 {
+  font-size: 1.8rem;
+  color: #1a365d;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.location-container p {
+  font-size: 1.2rem;
+  color: #2d3748;
+  margin: 10px 0;
+  line-height: 1.5;
+}
+
+
+
+
+
+/* Estilos para los detalles del clima */
+.weather-section p {
+  font-size: 1.3rem;
+  margin: 12px 0;
+  color: #2d3748;
+  line-height: 1.6;
+}
+
+/* Temperatura actual */
+.weather-section p.text-2xl {
+  font-size: 2.2rem;
+  color: #2b6cb0;
+  font-weight: bold;
+  margin: 20px 0;
+}
+
+/* Descripción del clima */
+.weather-section p.capitalize {
+  font-size: 1.8rem;
+  color: #4a5568;
+  font-style: italic;
+  margin-bottom: 15px;
+}
+
+/* Recomendaciones */
+.weather-section p{
+  font-size: 1.4rem;
+  color: #2d3748;
+}
+
+/* Estilos específicos para las recomendaciones */
+.weather-section p:contains("Recomendación:") {
+  background-color: #ebf8ff;
+  padding: 15px;
+  border-radius: 10px;
+  border-left: 5px solid #4299e1;
+  margin: 15px 0;
+  font-size: 1.2rem;
+  color: #2c5282;
+}
+
+/* Iconos del clima */
+.weather-section img {
+  width: 100px;
+  height: 100px;
+  margin: 10px 0;
+  background-color: rgba(128, 128, 128, 0.7);  /* Gris translúcido */
+  padding: 10px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+
+/* Responsive */
+@media (max-width: 768px) {
+  .weather-section {
+    padding: 1.5rem;
+    margin: 10px;
+  }
+
+  .weather-details-header h2 {
+    font-size: 2rem;
+  }
+
+  .weather-section p.text-2xl {
+    font-size: 1.8rem;
+  }
+
+  .weather-section p {
+    font-size: 1.1rem;
+  }
+}
