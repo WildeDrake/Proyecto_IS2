@@ -1,18 +1,17 @@
 const API_URL = 'http://localhost:5000/api/auth';
 
 export const authService = {
-  async register(name: string, email: string, password: string) {
+  async register(name: string, email: string, password: string, interests: string[]) {
     const response = await fetch(`${API_URL}/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name, email, password }),
+      body: JSON.stringify({ name, email, password, interests }),
     });
 
     if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Error al registrar usuario');
+      throw new Error('Error al registrar usuario');
     }
 
     return response.json();

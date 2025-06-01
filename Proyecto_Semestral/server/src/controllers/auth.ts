@@ -5,16 +5,56 @@ import pool from '../config/database';
 
 export const register = async (req: Request, res: Response) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, interests } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
     
-    const result = await pool.query(
-      'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id, name, email',
-      [name, email, hashedPassword]
-    );
-    
-    res.json(result.rows[0]);
+    // Start transaction
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+      
+      // Insert user
+      const userResult = await client.query(
+        'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id',
+        [name, email, hashedPassword]
+      );
+      
+      const userId = userResult.rows[0].id;
+      
+      // Insert user interests
+      for (const interest of interests) {
+        // Get interest id
+        const interestResult = await client.query(
+          'SELECT id FROM interests WHERE name = $1',
+          [interest]
+        );
+        const interestId = interestResult.rows[0].id;
+        
+        // Create user-interest relationship
+        await client.query(
+          'INSERT INTO user_interests (user_id, interest_id) VALUES ($1, $2)',
+          [userId, interestId]
+        );
+      }
+      
+      await client.query('COMMIT');
+      
+      res.status(201).json({
+        user: {
+          id: userId,
+          name,
+          email,
+          interests
+        }
+      });
+    } catch (err) {
+      await client.query('ROLLBACK');
+      throw err;
+    } finally {
+      client.release();
+    }
   } catch (err) {
+    console.error('Error en registro:', err);
     res.status(500).json({ error: 'Error al registrar usuario' });
   }
 };
