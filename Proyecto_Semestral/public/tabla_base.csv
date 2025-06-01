@@ -1,0 +1,61 @@
+﻿weather_main;Tipo;Operador;Valor;Recomendación_Base
+Clear;temp;>;umbral_max;Hace mucho calor, prefiere actividades bajo sombra o en interiores.
+Clear;temp;entre;umbral_calido,umbral_max;Día cálido y despejado, ideal para caminatas o actividades al aire libre.
+Clear;temp;entre;umbral_frio,umbral_calido;Clima templado y despejado, aprovecha para salir o hacer ejercicio moderado.
+Clear;temp;entre;umbral_min,umbral_frio;Un poco fresco pero agradable, considera un abrigo ligero si sales.
+Clear;temp;<;umbral_min;Hace bastante frío aunque esté despejado, considera actividades en casa.
+Clouds;temp;>;umbral_max;Día caluroso con nubosidad, busca sombra y mantente hidratado.
+Clouds;temp;entre;umbral_calido,umbral_max;Clima cálido con nubes, perfecto para actividades tranquilas al aire libre.
+Clouds;temp;entre;umbral_frio,umbral_calido;Nublado y templado, buen momento para paseos o actividades suaves.
+Clouds;temp;entre;umbral_min,umbral_frio;Fresco y nublado, lleva abrigo si vas a estar fuera.
+Clouds;temp;<;umbral_min;Hace frío y está nublado, considera quedarte en interiores.
+Rain;temp;>;umbral_max;Lluvia y calor, evita salir si no es necesario y mantente hidratado.
+Rain;temp;entre;umbral_calido,umbral_max;Lluvia y sensación cálida, lleva paraguas si sales.
+Rain;temp;entre;umbral_frio,umbral_calido;Día lluvioso y fresco, ideal para actividades en casa.
+Rain;temp;entre;umbral_min,umbral_frio;Lluvia fría, abrígate y cuida tu salud.
+Rain;temp;<;umbral_min;Lluvia intensa y mucho frío, evita salir y mantente resguardado.
+Snow;temp;>;umbral_max;Temperatura inusual con nieve, atención a riesgos de deshielo.
+Snow;temp;entre;umbral_calido,umbral_max;Nieve ligera con algo de calor, precaución si sales.
+Snow;temp;entre;umbral_frio,umbral_calido;Día nevado, ideal para actividades invernales si estás preparado.
+Snow;temp;entre;umbral_min,umbral_frio;Mucho frío y nieve, abrígate bien y evita zonas resbaladizas.
+Snow;temp;<;umbral_min;Nieve intensa y frío extremo, mejor quedarse en casa.
+Thunderstorm;temp;>;umbral_max;Tormenta eléctrica y calor, busca resguardo y mantente alejado de zonas abiertas.
+Thunderstorm;temp;entre;umbral_calido,umbral_max;Posible tormenta con temperatura cálida, evita salir innecesariamente.
+Thunderstorm;temp;entre;umbral_frio,umbral_calido;Riesgo de tormentas, buen momento para actividades bajo techo.
+Thunderstorm;temp;entre;umbral_min,umbral_frio;Clima inestable y frío, mantente en casa si puedes.
+Thunderstorm;temp;<;umbral_min;Frío extremo con tormenta, no es seguro estar en exteriores.
+Drizzle;temp;>;umbral_max;Llovizna con calor, posible bochorno, hidrátate si sales.
+Drizzle;temp;entre;umbral_calido,umbral_max;Llovizna cálida, ideal para un paseo corto con paraguas.
+Drizzle;temp;entre;umbral_frio,umbral_calido;Día suave con llovizna, perfecto para lectura o descanso.
+Drizzle;temp;entre;umbral_min,umbral_frio;Llovizna fría, abrígate si necesitas salir.
+Drizzle;temp;<;umbral_min;Llovizna muy fría, mejor quedarse en casa.
+Mist;temp;>;umbral_max;Neblina densa y calor, precaución al conducir.
+Mist;temp;entre;umbral_calido,umbral_max;Día cálido con neblina, limita la exposición si hay poca visibilidad.
+Mist;temp;entre;umbral_frio,umbral_calido;Clima brumoso y fresco, reduce actividades en exteriores.
+Mist;temp;entre;umbral_min,umbral_frio;Día frío y con niebla, abrígate bien.
+Mist;temp;<;umbral_min;Neblina espesa y frío intenso, no se recomienda salir.
+Haze;temp;>;umbral_max;Calima con calor, evita esfuerzos físicos y usa mascarilla si es necesario.
+Haze;temp;entre;umbral_calido,umbral_max;Cielo brumoso y cálido, limita tu actividad física.
+Haze;temp;entre;umbral_frio,umbral_calido;Día opaco por calima, realiza actividades en interiores.
+Haze;temp;entre;umbral_min,umbral_frio;Calima con frío, cuida tu sistema respiratorio.
+Haze;temp;<;umbral_min;Alta concentración de partículas, quédate en casa.
+Dust;temp;>;umbral_max;Polvo y calor, usa protección respiratoria y evita exponerte.
+Dust;temp;entre;umbral_calido,umbral_max;Ambiente polvoriento, limita tu tiempo al aire libre.
+Dust;temp;entre;umbral_frio,umbral_calido;Día con polvo suspendido, mantente en espacios cerrados.
+Dust;temp;entre;umbral_min,umbral_frio;Clima frío y seco con polvo, evita contacto con ojos o piel.
+Dust;temp;<;umbral_min;Muy poco recomendable estar fuera, protege tu salud.
+Fog;temp;>;umbral_max;Niebla espesa y calor, visibilidad reducida, no conduzcas largas distancias.
+Fog;temp;entre;umbral_calido,umbral_max;Niebla leve con temperatura templada, buena idea quedarse en casa.
+Fog;temp;entre;umbral_frio,umbral_calido;Día fresco con niebla, ideal para actividades en lugares cerrados.
+Fog;temp;entre;umbral_min,umbral_frio;Niebla densa y frío, evita conducir o andar en bici.
+Fog;temp;<;umbral_min;Niebla muy espesa y helada, condiciones peligrosas.
+Ash;temp;>;umbral_max;Ceniza y calor, usa mascarilla y permanece en interiores.
+Ash;temp;entre;umbral_calido,umbral_max;Posible caída de ceniza, evita actividades al aire libre.
+Ash;temp;entre;umbral_frio,umbral_calido;Riesgo moderado, mantente informado y resguardado.
+Ash;temp;entre;umbral_min,umbral_frio;Condiciones malas por ceniza y frío, no salgas si no es necesario.
+Ash;temp;<;umbral_min;Riesgo severo por ceniza y frío extremo, quédate en casa.
+Squall;temp;>;umbral_max;Ráfagas de viento y calor, ten cuidado con objetos sueltos
+Squall;temp;entre;umbral_calido,umbral_max;Viento fuerte y cálido, evita lugares con árboles o estructuras inestables.
+Squall;temp;entre;umbral_frio,umbral_calido;Día inestable con ráfagas, evita andar en bicicleta o moto.
+Squall;temp;entre;umbral_min,umbral_frio;Viento fuerte y frío, abrígate bien y limita la exposición.
+Squall;temp;<;umbral_min;Ráfagas intensas con mucho frío, no es recomendable salir.

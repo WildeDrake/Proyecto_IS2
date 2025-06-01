@@ -7,10 +7,18 @@
 - Ana Maria Vargas Miño.
 - Diego Joaquin Andres Venegas Anabalon.
 
+##### Requerimientos:
+PgAdmin y SQL 17.
+
 ##### Compilación y Ejecución:
 
 cd Proyecto_Semestral
-
 npm install
 
-npm run dev
+##### Backend:
+cd server
+para inicializar bases de datos: npm run init-db
+npm run dev 
+
+##### Frontend:
+npm run dev 
