@@ -108,3 +108,22 @@
 .modal-close:hover {
   color: #333;
 }
+
+.interests-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.interest-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.interest-checkbox input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+}

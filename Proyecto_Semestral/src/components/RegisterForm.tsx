@@ -12,11 +12,30 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onToggleForm }) 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [interests, setInterests] = useState<string[]>([]);
+
+  const availableInterests = [
+    'Deporte al aire Libre',
+    'Salir a Caminar',
+    'Jugar Futbol',
+    'Ir a la Playa',
+    'Hacer Picnic',
+    'Correr',
+    'Jugar Tenis',
+  ];
+
+  const handleInterestChange = (interest: string) => {
+    setInterests(prev => 
+      prev.includes(interest)
+        ? prev.filter(i => i !== interest)
+        : [...prev, interest]
+    );
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await authService.register(name, email, password);
+      await authService.register(name, email, password, interests);
       const token = await authService.login(email, password);
       if (token) {
         localStorage.setItem('token', token);
@@ -58,6 +77,21 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onToggleForm }) 
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+        </div>
+        <div className="form-group">
+          <label>Intereses:</label>
+          <div className="interests-grid">
+            {availableInterests.map((interest) => (
+              <label key={interest} className="interest-checkbox">
+                <input
+                  type="checkbox"
+                  checked={interests.includes(interest)}
+                  onChange={() => handleInterestChange(interest)}
+                />
+                {interest}
+              </label>
+            ))}
+          </div>
         </div>
         <button type="submit" className="auth-button">Registrarse</button>
       </form>
