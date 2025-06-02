@@ -5,11 +5,20 @@ export async function filtrarActividades(condicionesUsuario: any): Promise<any[]
   const actividades = parseCSV(csvText);
   const actividadesValidas = actividades.filter(act => cumpleCondiciones(act, condicionesUsuario));
 
+  // Si no se encontró ninguna actividad válida, devolver un mensaje por defecto
+  if (actividadesValidas.length === 0) {
+    return [{
+      actividad: "Sin coincidencias",
+      recomendacion: "Ninguna de tus preferencias tiene el clima de tus gustos, pero eso no impide que disfrutes de este día."
+    }];
+  }
+
   return actividadesValidas.map(act => ({
     actividad: act.actividad,
     recomendacion: act.recomendacion
   }));
 }
+
 
 function parseCSV(csvText: string): any[] {
   const lines = csvText.trim().split('\n');
