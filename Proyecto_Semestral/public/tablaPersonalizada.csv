@@ -1,0 +1,21 @@
+actividad,climas_permitidos,temp_range,viento_range,humedad_range,vis_min_km,requiere_sin_lluvia,recomendacion
+Salir a caminar,Clear|Rain,16-26,0-20,0-100,5,false,Hoy es un buen día para salir a caminar y despejar la mente.
+Jugar fútbol,Clear|Clouds,16-28,0-25,0-80,6,false,Aprovecha el clima para jugar una buena pichanga.
+Salir en bicicleta,Clear|Clouds,15-30,0-30,0-75,7,false,Ideal para pedalear y disfrutar del paisaje.
+Senderismo,Clear|Clouds,10-25,0-25,0-80,5,false,Perfecto para una caminata en contacto con la naturaleza.
+Nadar,Rain|Clouds,26-35,0-20,0-80,5,false,Perfecto para refrescarse con un buen chapuzón.
+Ir a la playa,Clear,25-35,0-25,0-75,5,false,Ideal para relajarte en la arena y disfrutar del sol.
+Correr al aire libre,Clear|Clouds|Drizzle,15-28,0-20,0-70,5,false,Corre a tu ritmo y libera el estrés del día.
+Ir al parque con amigos,Clear|Clouds,18-30,0-25,0-80,5,false,Una buena excusa para juntarse y pasarlo bien.
+Escalar al aire libre,Clear,10-25,0-20,0-60,5,false,Un reto divertido y diferente, ¡con buenas vistas!
+Jugar tenis,Clear|Clouds,15-28,0-15,0-75,6,false,Buen momento para practicar tu revés bajo el sol.
+Hacer picnic,Clear|Clouds,18-30,0-20,0-100,5,false,Prepara tu manta y disfruta del día al aire libre.
+Fotografía al aire libre,Clear|Clouds|Mist,5-25,0-20,0-100,3,false,Clima ideal para capturar momentos únicos.
+Volar drone,Clear,10-30,0-20,0-70,7,false,Cielo despejado, ¡perfecto para volar alto y grabar paisajes!
+Ciclismo de montaña,Clear|Clouds|Fog,10-28,0-25,0-70,5,false,Pedalea con adrenalina entre cerros y caminos rústicos.
+Patinaje o skate,Clear|Clouds,15-28,0-20,0-80,5,false,Día ideal para practicar trucos o simplemente deslizarse.
+Paseo en bote,Clear,18-30,0-15,0-80,6,false,Disfruta del vaivén tranquilo del agua, ideal para relajarse.
+Camping,Clear|Clouds,10-28,0-25,0-80,5,false,Aprovecha el clima para una noche bajo las estrellas.
+Noche de estrellas,Clear,0-40,0-15,0-90,8,false,Cielo despejado, abrígate y disfruta del espectáculo nocturno.
+Barbacoa en el patio,Clear|Clouds,20-32,0-25,0-80,5,false,¡Saca la parrilla y reúne a la familia o amigos!
+Juegos en plaza,Fog|Thunderstorm,18-30,0-20,0-80,5,false,Día ideal para compartir juegos y risas al aire libre.
