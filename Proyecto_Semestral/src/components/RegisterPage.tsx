@@ -36,7 +36,7 @@ const RegisterPage = () => {
       const token = await authService.login(email, password);
       if (token) {
         localStorage.setItem('token', token);
-        navigate('/dashboard');
+        navigate('/');
       }
     } catch (err) {
       setError('Error al registrar usuario');
@@ -103,7 +103,7 @@ const RegisterPage = () => {
           </div>
         </form>
         <p className="login-link">
-          ¿Ya tienes una cuenta? <a onClick={() => navigate('/login')}>Inicia sesión aquí</a>
+          ¿Ya tienes una cuenta? <a onClick={() => navigate('/', { state: { showLogin: true } })}>Inicia sesión aquí</a>
         </p>
       </div>
     </div>

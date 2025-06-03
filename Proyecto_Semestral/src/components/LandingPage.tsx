@@ -14,6 +14,7 @@ import { Geolocalizar } from "../services/Geolocalizar";
 import useFavorites from "../hooks/useFavorites";
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
+import { useLocation } from 'react-router-dom';
 
 interface LandingPageProps {
   onWeatherSearch?: (city: string) => void;
@@ -63,17 +64,19 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
   ];
   const [userCoords, setUserCoords] = useState<[number, number] | null>(null);
 
-useEffect(() => {
-  const getCoords = async () => {
-    try {
-      const ubicacion = await Geolocalizar(); // Tu función personalizada
-      setUserCoords([ubicacion.lat, ubicacion.lon]);
-    } catch (error) {
-      console.error("No se pudo obtener la ubicación del usuario");
-    }
-  };
-  getCoords();
-}, []);
+  const location = useLocation();
+
+  useEffect(() => {
+    const getCoords = async () => {
+      try {
+        const ubicacion = await Geolocalizar(); // Tu función personalizada
+        setUserCoords([ubicacion.lat, ubicacion.lon]);
+      } catch (error) {
+        console.error("No se pudo obtener la ubicación del usuario");
+      }
+    };
+    getCoords();
+  }, []);
 
 
   // Efecto para cargar el clima de la ubicación actual al iniciar
@@ -93,6 +96,16 @@ useEffect(() => {
     
     loadLocalWeather();
   }, []);
+
+  // Replace the existing useEffect for location state
+  useEffect(() => {
+    if (location.state?.showLogin) {
+      setShowAuthModal(true);
+      setIsLogin(true);
+      // Clear the state after showing the modal
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state?.showLogin]);
 
   const handleInterestToggle = (interest: string) => {
     if (selectedInterests.includes(interest)) {
@@ -177,7 +190,7 @@ useEffect(() => {
           <button 
             className="btn-login" 
             onClick={() => {
-              console.log('Botón clickeado'); // Debug
+              console.log('Botón clickeado');
               if (isAuthenticated) {
                 localStorage.removeItem('token');
                 setIsAuthenticated(false);
@@ -189,6 +202,14 @@ useEffect(() => {
           >
             {isAuthenticated ? 'Cerrar Sesión' : 'Iniciar Sesión'}
           </button>
+          {isAuthenticated && (
+            <button 
+              className="btn-profile"
+              onClick={() => window.location.href = '/dashboard'}
+            >
+              Mi Perfil
+            </button>
+          )}
         </div>
       </nav>
 

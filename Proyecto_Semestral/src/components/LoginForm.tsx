@@ -1,14 +1,15 @@
 // filepath: c:\Users\Gaspar_Jimenez\Documents\IS2\Proyecto_IS2\Proyecto_Semestral\src\components\LoginForm.tsx
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { authService } from '../services/authService';
 import '../styles/Auth.css';
 
 interface LoginFormProps {
   onSuccess: () => void;
-  onToggleForm: () => void;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onToggleForm }) => {
+const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -55,7 +56,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onToggleForm }) => {
       </form>
       <p className="toggle-form">
         ¿No tienes una cuenta?{' '}
-        <button onClick={onToggleForm}>Regístrate aquí</button>
+        <button onClick={() => navigate('/register')}>Regístrate aquí</button>
       </p>
     </div>
   );
