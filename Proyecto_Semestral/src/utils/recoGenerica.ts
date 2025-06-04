@@ -112,36 +112,3 @@ export async function getRecoGenerica(tipo: string, input: number | string): Pro
 }
 
 
-export async function getRecoGenericaFromConditions(
-  condiciones: Record<string, number | string>
-): Promise<string[]> {
-  if (rules.length === 0) await initializeRules();
-
-  const recomendaciones: string[] = [];
-
-  for (const rule of rules) {
-    const input = condiciones[rule.tipo];
-    if (input === undefined) continue;
-
-    const match = (() => {
-      switch (rule.operador) {
-        case ">":
-          return typeof input === "number" && input > (rule.valor as number);
-        case "<":
-          return typeof input === "number" && input < (rule.valor as number);
-        case "entre":
-          if (typeof input !== "number") return false;
-          const [min, max] = rule.valor as [number, number];
-          return input >= min && input <= max;
-        case "=":
-          return typeof input === "string" && input === rule.valor;
-        default:
-          return false;
-      }
-    })();
-
-    if (match) recomendaciones.push(rule.recomendacion);
-  }
-
-  return recomendaciones;
-}
