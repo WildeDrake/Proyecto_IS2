@@ -16,9 +16,19 @@ cd Proyecto_Semestral
 npm install
 
 ##### Backend:
+cd Proyecto_Semestral
+
 cd server
-para inicializar bases de datos: npm run init-db
+
+npm install
+
+npm run init-db
+
 npm run dev 
 
 ##### Frontend:
+cd Proyecto_Semestral
+
+npm install
+
 npm run dev 
