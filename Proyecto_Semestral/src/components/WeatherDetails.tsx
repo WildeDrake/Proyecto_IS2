@@ -1,55 +1,97 @@
 import React, { useEffect, useState } from "react";
 import { WeatherData } from "../types/weather";
-import { getResultado } from "../utils/combinar";
+import { getRecoPersonalizada } from "../utils/recoPersonalizada";
+import { getRecoGenerica } from "../utils/recoGenerica";
 
 const WeatherDetails: React.FC<{ weather: WeatherData }> = ({ weather }) => {
-  const [tempRecommendation, setTempRecommendation] = useState<string | null>(null);
-  const [actividadRecomendadas, setActividadRecomendadas] = useState<{ actividad: string; recomendacion: string }[] | null>(null);
+  const [recoGenericas, setRecoGenericas] = useState<string[]>([]);
+  const [actividadRecomendadas, setActividadRecomendadas] = useState<
+    { actividad: string; recomendacion: string }[] | null
+  >(null);
+  const [recomendacionBase, setRecomendacionBase] = useState<string>("");
+  const [isLogged, setIsLogged] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchRecomendaciones = async () => {
       const condiciones = {
-        weather_main: "Clouds", // weather.weather[0].main
-        temp: 20, // weather.main.temp
-        viento: 2, // weather.wind.speed
-        humedad: 20, // weather.main.humidity
-        visibilidad: 7, // weather.visibility
-        lluvia: false, // weather.rain
+        weather_main: weather.weather[0].main,
+        temp: weather.main.temp,
+        viento: weather.wind.speed,
+        humedad: weather.main.humidity,
+        visibilidad: weather.visibility || 0,
+        lluvia: weather.rain ? weather.rain["1h"] || 0 : 0
       };
 
-      const resultado = await getResultado(condiciones);
-      setTempRecommendation(resultado.recomendacionBase);
-      setActividadRecomendadas(resultado.actividades);
+      const token = localStorage.getItem("token");
+      setIsLogged(!!token);
+
+      if (token) {
+        try {
+          const recoPersonalizada = await getRecoPersonalizada(condiciones);
+          setRecomendacionBase(recoPersonalizada.recomendacionBase);
+          if (recoPersonalizada?.actividades?.length > 0) {
+            setActividadRecomendadas(recoPersonalizada.actividades);
+          }
+        } catch (err) {
+          console.error("Error al obtener recomendación personalizada:", err);
+        }
+      }
+      
+      recoGenericas.length = 0;
+      const r1 = await getRecoGenerica('weather_main', condiciones.weather_main);
+      if (r1) recoGenericas.push(r1);
+      const r2 = await getRecoGenerica('temp', condiciones.temp);
+      if (r2) recoGenericas.push(r2);
+      const r3 = await getRecoGenerica('humidity', condiciones.humedad);
+      if (r3) recoGenericas.push(r3);
+      const r5 = await getRecoGenerica('wind_speed', condiciones.viento);
+      if (r5) recoGenericas.push(r5);
+      const r6 = await getRecoGenerica('visibility', condiciones.visibilidad);
+      if (r6) recoGenericas.push(r6);
+      const r7 = await getRecoGenerica('rain.pop', condiciones.lluvia);
+      if (r7) recoGenericas.push(r7);
+      setRecoGenericas(recoGenericas);
     };
 
     fetchRecomendaciones();
   }, [weather]);
 
   return (
-    <div className="flex gap-4 items-center">
+    <div className="flex gap-4 items-start">
       <img
         src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
         alt="Icono del clima"
       />
       <div>
         <p className="capitalize">{weather.weather[0].description}</p>
-
         <p className="text-2xl font-bold">
           La temperatura actual es de: {Math.round(weather.main.temp)}°C
         </p>
-
         <p>La humedad actual es de: {weather.main.humidity}%</p>
         <p>Velocidad del viento: {weather.wind.speed} m/s</p>
 
-        <p>{tempRecommendation && `Recomendación base: ${tempRecommendation}`}</p>
-        {actividadRecomendadas && actividadRecomendadas.length > 0 && (
-          <div className="mt-4">
-            <h3 className="font-semibold">Actividades sugeridas:</h3>
-            <ul className="list-disc list-inside">
+        {/* Personalizadas (si está logueado) */}
+        {isLogged && actividadRecomendadas && actividadRecomendadas.length > 0 && (
+          <div className="mt-4 bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
+            <h3 className="font-semibold text-blue-700 text-lg mb-2">🌟 Recomendaciones Personalizadas</h3>
+            <h4 className="list-disc list-inside text-blue-900 space-y-1"> {recomendacionBase}</h4>
+            <ul className="list-disc list-inside text-blue-900 space-y-1">
               {actividadRecomendadas.map((act, index) => (
                 <li key={index}>
                   <strong>{act.actividad}:</strong> {act.recomendacion}
                 </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* Generales (siempre visibles) */}
+        {recoGenericas.length > 0 && (
+          <div className="mt-4 bg-gray-100 border-l-4 border-gray-400 p-4 rounded">
+            <h3 className="font-semibold text-gray-700 text-lg mb-2">📋 Recomendaciones Generales</h3>
+            <ul className="list-disc list-inside text-gray-800 space-y-1">
+              {recoGenericas.map((reco, index) => (
+                <li key={index}>{reco}</li>
               ))}
             </ul>
           </div>

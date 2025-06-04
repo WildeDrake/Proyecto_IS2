@@ -27,3 +27,21 @@ export async function updateUserInterests(interests: string[]) {
 
   return await res.json();
 }
+
+export async function getUserInterests() {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    throw new Error('No token found');
+  }
+  const res = await fetch(`${API_URL}/getUserInterests`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+  });
+  if (!res.ok) {
+    throw new Error('Error fetching user interests');
+  }
+  return await res.json();
+}

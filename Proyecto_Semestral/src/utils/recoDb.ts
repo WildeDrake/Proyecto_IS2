@@ -18,7 +18,7 @@ const CLIMA_IDS: Record<string, number> = {
   Tornado: 15
 };
 
-export async function actividadesRecomendadas(condiciones: any) {
+export async function getActRecomendadas(condiciones: any) {
   const actividades = await obtenerActividades();
   const climaId = CLIMA_IDS[condiciones.weather_main];
 
@@ -35,7 +35,7 @@ export async function actividadesRecomendadas(condiciones: any) {
 
   return actividadesValidas.map((act: any) => ({
     actividad: act.name,
-    recomendacion: `Ideal para un clima como el de hoy: ${condiciones.weather_main.toLowerCase()}`
+    recomendacion: `Ideal para un clima como el de hoy.`
   }));
 }
 

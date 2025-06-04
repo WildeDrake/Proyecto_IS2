@@ -41,3 +41,24 @@ export const updateUserInterests = async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Error al actualizar intereses' });
   }
 };
+
+export const getUserInterests = async (req: Request, res: Response) => {
+  const userId = req.user?.id;
+
+  if (!userId) {
+    return res.status(400).json({ error: 'Usuario no autenticado' });
+  }
+  try {
+    const result = await pool.query(
+      `SELECT i.name FROM interests i
+       JOIN user_interests ui ON i.id = ui.interest_id
+       WHERE ui.user_id = $1`,
+      [userId]
+    );
+
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error al obtener los intereses del usuario' });
+  }
+};
