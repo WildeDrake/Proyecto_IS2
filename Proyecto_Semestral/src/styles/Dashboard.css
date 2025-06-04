@@ -22,6 +22,21 @@
   font-size: 16px;
 }
 
+.success-message {
+  color: green;
+  background-color: #e6ffe6;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+.error-message {
+  color: red;
+  background-color: #ffe6e6;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
 .sidebar-button:hover {
   background-color: #e0e0e0;
 }

@@ -9,6 +9,7 @@ import FavoritesList from "../components/FavoritesList";
 import UbicacionActual from "./ubicacionActual";
 import ErrorMessage from "./ErrorMessage";
 import Loading from "./Loading";
+import { useNavigate } from 'react-router-dom';
 import { fetchWeather, fetchForecast } from "../services/weatherService";
 import { Geolocalizar } from "../services/Geolocalizar";
 import useFavorites from "../hooks/useFavorites";
@@ -22,6 +23,7 @@ interface LandingPageProps {
 
 const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
   // Estados para el formulario de registro
+  const navigate = useNavigate();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
@@ -193,7 +195,9 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
               console.log('Botón clickeado');
               if (isAuthenticated) {
                 localStorage.removeItem('token');
+                localStorage.clear();
                 setIsAuthenticated(false);
+                navigate('/');
               } else {
                 setShowAuthModal(true);
                 setIsLogin(true);

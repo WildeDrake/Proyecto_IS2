@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { userService } from '../services/userService';
+import { obtenerActividades, updateUserInterests } from '../services/interests';
 import '../styles/Dashboard.css';
+
 
 interface UserProfile {
   name: string;
@@ -9,11 +11,14 @@ interface UserProfile {
   interests: string[];
 }
 
+
+
 const Dashboard: React.FC = () => {
   const [activeSection, setActiveSection] = useState('profile');
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
   const [profile, setProfile] = useState<UserProfile>({
     name: '',
     email: '',
@@ -26,48 +31,60 @@ const Dashboard: React.FC = () => {
     interests: []
   });
   const [password, setPassword] = useState('');
-
+  const [actividades, setActividades] = useState<any[]>([]);
+  
+  // UseEffect para borrar mensajes dentro de 2 segs.
   useEffect(() => {
-    loadUserProfile();
+    if (error || message) {
+      const timer = setTimeout(() => {
+        setError(null);
+        setMessage(null);
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [error, message]);
+  
+  // UseEffect para carga de datos.
+  useEffect(() => {
+    setError(null);
+    setMessage(null);
+    const cargarDatos = async () => {
+      try {
+        const userData = await userService.getProfile();
+        const data = await obtenerActividades();
+
+        setProfile(userData);
+        setEditedProfile(userData);
+        setActividades(data);
+        setLoading(false);
+      } catch (err) {
+        setError('Error al cargar los datos');
+        setLoading(false);
+      }
+    };
+    cargarDatos();
   }, []);
 
-  const loadUserProfile = async () => {
-    try {
-      const userData = await userService.getProfile();
-      setProfile(userData);
-      setEditedProfile(userData);
-      setLoading(false);
-    } catch (err) {
-      setError('Error al cargar el perfil');
-      setLoading(false);
-    }
-  };
 
   const handleProfileUpdate = async () => {
-    try {
-      const updateData = {
-        ...editedProfile,
-        password: password || undefined
-      };
-      await userService.updateProfile(updateData);
-      setProfile(editedProfile);
-      setEditingProfile(false);
-      setPassword('');
-      setError(null);
-    } catch (err) {
-      setError('Error al actualizar el perfil');
-    }
-  };
+  try {
+    const updateData = {
+      ...editedProfile,
+      password: password || undefined
+    };
+    await userService.updateProfile(updateData);
+    setProfile(editedProfile);
+    setEditingProfile(false);
+    setPassword('');
+    setError(null);
+    setMessage('Perfil actualizado correctamente');
+  } catch (err) {
+    setError('Error al actualizar el perfil');
+  }
+};
 
-  const availableInterests = [
-    'Deporte al aire Libre',
-    'Salir a Caminar',
-    'Jugar Futbol',
-    'Ir a la Playa',
-    'Hacer Picnic',
-    'Correr',
-    'Jugar Tenis',
-  ];
+
 
   if (!localStorage.getItem('token')) {
     navigate('/');
@@ -103,7 +120,7 @@ const Dashboard: React.FC = () => {
       
       <div className="dashboard-content">
         {error && <div className="error-message">{error}</div>}
-        
+        {message && <div className="success-message">{message}</div>}
         {activeSection === 'profile' && (
           <div className="profile-section">
             <h2>Mi Perfil</h2>
@@ -178,26 +195,37 @@ const Dashboard: React.FC = () => {
           <div className="interests-section">
             <h2>Mis Intereses</h2>
             <div className="interests-grid">
-              {availableInterests.map((interest) => (
-                <label key={interest} className="interest-item">
-                  <input 
+              {actividades.map((actividad) => (
+                <label key={actividad.id} className="interest-item">
+                  <input
                     type="checkbox"
-                    checked={editedProfile.interests.includes(interest)}
+                    checked={editedProfile.interests.includes(actividad.name)}
                     onChange={(e) => {
-                      const newInterests = e.target.checked 
-                        ? [...editedProfile.interests, interest]
-                        : editedProfile.interests.filter(i => i !== interest);
+                      const newInterests = e.target.checked
+                        ? [...editedProfile.interests, actividad.name]
+                        : editedProfile.interests.filter(i => i !== actividad.name);
                       setEditedProfile({
                         ...editedProfile,
                         interests: newInterests
                       });
                     }}
                   />
-                  {interest}
+                  {actividad.name}
                 </label>
               ))}
             </div>
-            <button onClick={handleProfileUpdate}>
+            <button onClick={async () => {
+              try {
+                await updateUserInterests(editedProfile.interests);
+                setProfile({ ...profile, interests: editedProfile.interests });
+                setMessage('Intereses actualizados correctamente');
+                setError(null);
+              } catch (error) {
+                setMessage(null);
+                setError('No se pudieron actualizar los intereses');
+
+              }
+            }}>
               Actualizar Intereses
             </button>
           </div>
