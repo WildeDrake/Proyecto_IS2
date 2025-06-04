@@ -317,62 +317,20 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
         </div>
       </div>
 
-      {/* Formulario de registro */}
       <div className="registration-section">
-        <h2>¡Regístrate para recibir recomendaciones personalizadas!</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="name">Nombre</label>
-              <input 
-                type="text" 
-                id="name" 
-                value={name} 
-                onChange={(e) => setName(e.target.value)} 
-                required 
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="email">Correo</label>
-              <input 
-                type="email" 
-                id="email" 
-                value={email} 
-                onChange={(e) => setEmail(e.target.value)} 
-                required 
-              />
-            </div>
-          </div>
-          
-          <div className="form-interests">
-            <label>Intereses</label>
-            <div className="interests-options">
-              <button 
-                type="button" 
-                className={selectedInterests.includes('Playa') ? 'selected' : ''}
-                onClick={() => handleInterestToggle('Playa')}
-              >
-                Playa
-              </button>
-              <button 
-                type="button" 
-                className={selectedInterests.includes('Montaña') ? 'selected' : ''}
-                onClick={() => handleInterestToggle('Montaña')}
-              >
-                Montaña
-              </button>
-              <button 
-                type="button" 
-                className={selectedInterests.includes('Indoor') ? 'selected' : ''}
-                onClick={() => handleInterestToggle('Indoor')}
-              >
-                Indoor
-              </button>
-            </div>
-          </div>
-          
-          <button type="submit" className="submit-button">Crear cuenta</button>
-        </form>
+        <h2>¿Aún no tienes una cuenta?</h2>
+        <button 
+          className="register-cta-button"
+          onClick={() => {
+            if (isAuthenticated) {
+              navigate('/');
+            } else {
+              navigate('/register');
+            }
+          }}
+        >
+          {isAuthenticated ? 'Volver al Inicio' : '¡Regístrate Aquí!'}
+        </button>
       </div>
 
       {/* Footer */}
