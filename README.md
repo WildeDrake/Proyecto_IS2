@@ -8,7 +8,7 @@
 - Diego Joaquin Andres Venegas Anabalon.
 
 ##### Requerimientos:
-PgAdmin y SQL 17.
+PgAdmin y PostgreSQL 17.
 
 ##### Compilación y Ejecución:
 
