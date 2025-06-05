@@ -22,33 +22,23 @@ interface LandingPageProps {
 }
 
 const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
-  // Estados para el formulario de registro
   const navigate = useNavigate();
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   
-  // Estados para la funcionalidad del clima
   const [city, setCity] = useState("");
-  const [country, setCountry] = useState(""); // Nuevo estado para el país
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchCountry, setSearchCountry] = useState(""); // Nuevo estado para búsqueda en navbar
+  const [country, setCountry] = useState("");
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [forecast, setForecast] = useState<ForecastData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [showWeatherDetails, setShowWeatherDetails] = useState(false);
   
   const { favorites, addFavorite, removeFavorite } = useFavorites();
 
   const [showAuthModal, setShowAuthModal] = useState<boolean>(false);
   const [isLogin, setIsLogin] = useState<boolean>(true);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    // Verificar si hay un token guardado
     return !!localStorage.getItem('token');
   });
 
-  // Obtener fecha actual
   const today = new Date();
   const dayNames = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
   const dayName = dayNames[today.getDay()];
@@ -56,7 +46,6 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
   const month = (today.getMonth() + 1).toString().padStart(2, '0');
   const dateString = `${day}/${month}`;
   
-  // Actividades disponibles
   const activities = [
     { id: 1, image: '/activities/leer.jpg', alt: 'Persona leyendo' },
     { id: 2, image: '/activities/cocinar.jpg', alt: 'Cocinando' },
@@ -71,7 +60,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
   useEffect(() => {
     const getCoords = async () => {
       try {
-        const ubicacion = await Geolocalizar(); // Tu función personalizada
+        const ubicacion = await Geolocalizar();
         setUserCoords([ubicacion.lat, ubicacion.lon]);
       } catch (error) {
         console.error("No se pudo obtener la ubicación del usuario");
@@ -80,14 +69,10 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
     getCoords();
   }, []);
 
-
-  // Efecto para cargar el clima de la ubicación actual al iniciar
   useEffect(() => {
     const loadLocalWeather = async () => {
       try {
         setLoading(true);
-        // Obtener ubicación actual
-        // Buscar clima por coordenadas (usaremos la ciudad de "Concepción" como valor inicial)
         await handleFetchWeather("Concepción", "");
       } catch (err) {
         console.error("No se pudo cargar el clima local:", err);
@@ -99,39 +84,14 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
     loadLocalWeather();
   }, []);
 
-  // Replace the existing useEffect for location state
   useEffect(() => {
     if (location.state?.showLogin) {
       setShowAuthModal(true);
       setIsLogin(true);
-      // Clear the state after showing the modal
       window.history.replaceState({}, document.title);
     }
   }, [location.state?.showLogin]);
 
-  const handleInterestToggle = (interest: string) => {
-    if (selectedInterests.includes(interest)) {
-      setSelectedInterests(selectedInterests.filter(i => i !== interest));
-    } else {
-      setSelectedInterests([...selectedInterests, interest]);
-    }
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Datos del formulario:', { name, email, selectedInterests });
-    alert('¡Gracias por registrarte! Recibirás recomendaciones personalizadas pronto.');
-  };
-
-  // Manejador de búsqueda para el navbar
-  const handleNavbarSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      handleFetchWeather(searchQuery, searchCountry);
-    }
-  };
-
-  // Función para obtener el clima
   const handleFetchWeather = async (cityName: string, countryName: string) => {
     setLoading(true);
     setError("");
@@ -141,12 +101,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
       console.log("Pronóstico desde LandingPage:", forecast);
       const forecastData = await fetchForecast(weatherData.name);
       setForecast(forecastData);
-      setShowWeatherDetails(true);
       
-      // Actualizar la temperatura en la tarjeta principal
-      // Actualizamos el nombre de la ciudad en caso que sea diferente
-      
-      // Si existe el callback del componente padre, también lo llamamos
       if (onWeatherSearch) {
         onWeatherSearch(cityName);
       }
@@ -171,23 +126,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
     <div className="landing-page">
       {/* Navbar */}
       <nav className="navbar">
-        <div className="navbar-brand">Nombre página</div>
-        <form className="search-container" onSubmit={handleNavbarSearch}>
-          <input 
-            type="text" 
-            placeholder="Buscar ciudad..." 
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <input 
-            type="text" 
-            placeholder="País (ej: CL, US)" 
-            value={searchCountry}
-            onChange={(e) => setSearchCountry(e.target.value)}
-            maxLength={2}
-          />
-          <button type="submit" className="search-button">🔍</button>
-        </form>
+        <div className="navbar-brand">Tu Clima</div>
+
         <div className="navbar-actions">
           <button 
             className="btn-login" 

@@ -32,6 +32,34 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onToggleForm }) 
     );
   };
 
+  const handleInvalid = (e: React.FormEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const target = e.target as HTMLInputElement;
+    // Para campos de email, personalizar el mensaje según el tipo de error
+    if (target.type === 'email') {
+      const value = target.value;
+      if (!value) {
+        target.setCustomValidity('Completa este campo');
+      } else if (!value.includes('@')) {
+        target.setCustomValidity('Incluye una @ en el email');
+      } else if (value.indexOf('@') === value.length - 1) {
+        target.setCustomValidity('Completa el email correctamente');
+      } else {
+        target.setCustomValidity('Formato de email inválido');
+      }
+    } else {
+      if (target.name === 'name') {
+        target.setCustomValidity('Completa este campo');
+      } else if (target.name === 'password') {
+        target.setCustomValidity('Ingresa una contraseña');
+      }
+    }
+  };
+
+  const handleInput = (e: React.FormEvent<HTMLInputElement>) => {
+    e.currentTarget.setCustomValidity('');
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -42,40 +70,55 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onToggleForm }) 
         onSuccess();
       }
     } catch (err) {
-      setError('Error al registrar usuario');
+      setError('Error');
     }
   };
 
   return (
     <div className="auth-form-container">
-      <h2>Registro</h2>
+      <h2>Crear Cuenta</h2>
       <form onSubmit={handleSubmit} className="auth-form">
-        {error && <div className="error-message">{error}</div>}
+        {error && <div className="simple-error-message">{error}</div>}
         <div className="form-group">
           <label>Nombre:</label>
           <input
             type="text"
+            name="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            onInvalid={handleInvalid}
+            onInput={handleInput}
             required
+            placeholder=""
+            title=""
           />
         </div>
         <div className="form-group">
           <label>Email:</label>
           <input
             type="email"
+            name="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            onInvalid={handleInvalid}
+            onInput={handleInput}
             required
+            placeholder=""
+            title=""
           />
         </div>
         <div className="form-group">
           <label>Contraseña:</label>
           <input
             type="password"
+            name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onInvalid={handleInvalid}
+            onInput={handleInput}
             required
+            placeholder=""
+            title=""
           />
         </div>
         <div className="form-group">
@@ -97,7 +140,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onToggleForm }) 
       </form>
       <p className="toggle-form">
         ¿Ya tienes una cuenta?{' '}
-        <button onClick={onToggleForm}>Inicia sesión aquí</button>
+        <button type="button" onClick={onToggleForm}>Inicia sesión aquí</button>
       </p>
     </div>
   );

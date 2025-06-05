@@ -1,19 +1,274 @@
+/* Estilos para formulario dentro del modal */
+.auth-form-container {
+  padding: 3rem 3.5rem;
+  background: white;
+}
+
+.auth-form-container h2 {
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+  margin-top: 0;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.auth-form .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.auth-form .form-group label {
+  color: #2c3e50;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.auth-form .form-group input {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  background-color: white;
+  color: #000;
+  transition: border-color 0.3s ease;
+}
+
+.auth-form .form-group input::placeholder {
+  color: #999;
+  font-style: italic;
+}
+
+.auth-form .form-group input:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.auth-form .interests-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.auth-form .interest-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+  background: white;
+  color: #000;
+  transition: background-color 0.2s ease;
+}
+
+.auth-form .interest-checkbox:hover {
+  background-color: #f8f9fa;
+}
+
+.auth-form .interest-checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  background-color: white;
+  border: 2px solid #ddd;
+  border-radius: 3px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  position: relative;
+  outline: none;
+}
+
+.auth-form .interest-checkbox input[type="checkbox"]:checked {
+  background-color: white;
+  border-color: #3498db;
+}
+
+.auth-form .interest-checkbox input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #3498db;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.auth-button {
+  padding: 14px 28px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.auth-button:hover {
+  background-color: #2980b9;
+  transform: translateY(-1px);
+}
+
+.toggle-form {
+  text-align: center;
+  margin-top: 2rem;
+  color: #2c3e50;
+}
+
+.toggle-form button {
+  background: none;
+  border: none;
+  color: #3498db;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: inherit;
+}
+
+.toggle-form button:hover {
+  color: #2980b9;
+}
+
+/* Social login buttons for modal */
+.social-login-container {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #eee;
+}
+
+.social-login-button {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.social-login-button:hover {
+  background-color: #f8f9fa;
+  border-color: #007bff;
+}
+
+.social-login-button.google {
+  color: #4285f4;
+}
+
+.social-login-button.apple {
+  color: #000;
+}
+
+.social-login-button.facebook {
+  color: #1877f2;
+}
+
+.divider {
+  text-align: center;
+  margin: 1.5rem 0;
+  position: relative;
+  color: #666;
+}
+
+.divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #ddd;
+  z-index: 1;
+}
+
+.divider span {
+  background: white;
+  padding: 0 15px;
+  position: relative;
+  z-index: 2;
+}
+
+/* Responsive para modal */
+@media (max-width: 480px) {
+  .auth-form-container {
+    padding: 2rem;
+  }
+  
+  .auth-form-container h2 {
+    font-size: 1.5rem;
+  }
+  
+  .auth-button {
+    padding: 12px 24px;
+    font-size: 1rem;
+  }
+}
+
+/* Estilos para la página de registro */
 .page-container {
   min-height: 100vh;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  padding: 20px;
+  flex-direction: column;
+  background: white;
 }
 
 .register-page-form {
-  background: white;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 2rem;
+  background-image: url('/paisaje.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  position: relative;
+}
+
+.register-page-form::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(3px);
+  z-index: 1;
+}
+
+.register-form-container {
+  background: rgba(255, 255, 255, 0.9);
   padding: 2rem;
   border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   width: 100%;
   max-width: 600px;
+  position: relative;
+  z-index: 2;
 }
 
 .register-page-form h1 {
@@ -21,12 +276,6 @@
   text-align: center;
   margin-bottom: 2rem;
   font-size: 2rem;
-}
-
-.auth-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
 }
 
 .form-group {
@@ -45,10 +294,17 @@
 .form-group input[type="email"],
 .form-group input[type="password"] {
   padding: 12px;
-  border: 1px solid #e1e1e1;
+  border: 1px solid #ddd;
   border-radius: 6px;
   font-size: 1rem;
+  background-color: white;
+  color: #000;
   transition: border-color 0.3s ease;
+}
+
+.form-group input::placeholder {
+  color: #999;
+  font-style: italic;
 }
 
 .form-group input:focus {
@@ -62,7 +318,8 @@
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 1rem;
   padding: 1rem;
-  background: #f8f9fa;
+  background: white;
+  border: 1px solid #ddd;
   border-radius: 6px;
 }
 
@@ -73,17 +330,43 @@
   cursor: pointer;
   padding: 8px;
   border-radius: 4px;
+  background: white;
+  color: #000;
   transition: background-color 0.2s ease;
 }
 
 .interest-checkbox:hover {
-  background-color: #e9ecef;
+  background-color: #f8f9fa;
 }
 
 .interest-checkbox input[type="checkbox"] {
   width: 18px;
   height: 18px;
   cursor: pointer;
+  background-color: white;
+  border: 2px solid #ddd;
+  border-radius: 3px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  position: relative;
+  outline: none;
+}
+
+.interest-checkbox input[type="checkbox"]:checked {
+  background-color: white;
+  border-color: #3498db;
+}
+
+.interest-checkbox input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #3498db;
+  font-weight: bold;
+  font-size: 12px;
 }
 
 .form-actions {
@@ -121,6 +404,13 @@
 .btn-secondary:hover {
   background-color: #7f8c8d;
   transform: translateY(-1px);
+}
+
+.simple-error-message {
+  color: #000;
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
 }
 
 .error-message {
