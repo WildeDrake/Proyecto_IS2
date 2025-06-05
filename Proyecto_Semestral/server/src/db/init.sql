@@ -37,6 +37,12 @@ CREATE TABLE IF NOT EXISTS user_interests (
     interest_id INTEGER REFERENCES interests(id) ON DELETE CASCADE,
     PRIMARY KEY (user_id, interest_id)
 );
+--tokens invalidos para el blacklist
+CREATE TABLE IF NOT EXISTS blacklisted_tokens (
+    id SERIAL PRIMARY KEY,
+    token TEXT NOT NULL,
+    expira_en TIMESTAMP WITH TIME ZONE NOT NULL
+);
 
 -- Verifica si la tabla está vacía
 DO $$
