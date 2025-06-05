@@ -33,5 +33,9 @@ export const authService = {
 
     const data = await response.json();
     return data.token;
-  }
+  },
+    logout() {
+    localStorage.removeItem("token"); // Ajusta el nombre si es diferente
+    localStorage.removeItem("user");  // Opcional
+    }
 };

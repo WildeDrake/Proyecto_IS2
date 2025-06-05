@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { userService } from '../services/userService';
 import { obtenerActividades, updateUserInterests } from '../services/interests';
+import { authService } from '../services/authService';
 import '../styles/Dashboard.css';
 
 
@@ -32,6 +33,16 @@ const Dashboard: React.FC = () => {
   });
   const [password, setPassword] = useState('');
   const [actividades, setActividades] = useState<any[]>([]);
+  const handleLogout = () => {
+    authService.logout();
+    navigate('/'); //window.location.href = '/'; se puede usar eso para refrescar pagina en vez de navigate
+  };
+  useEffect(() => {
+    if (!localStorage.getItem('token')) {
+      navigate('/');
+    }
+  }, [navigate]);
+
   
   // UseEffect para borrar mensajes dentro de 2 segs.
   useEffect(() => {
@@ -115,6 +126,12 @@ const Dashboard: React.FC = () => {
           onClick={() => navigate('/')}
         >
           Volver al Inicio
+        </button>
+        <button 
+          className="sidebar-button logout-button"
+          onClick={handleLogout}
+        >
+          Cerrar sesión
         </button>
       </div>
       
