@@ -5,15 +5,13 @@ import pool from '../config/database';
 
 export const register = async (req: Request, res: Response) => {
   try {
-    const { name, email, password, interests } = req.body;
+    const { name, email, password } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
     
-    // Start transaction
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
       
-      // Insert user
       const userResult = await client.query(
         'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id',
         [name, email, hashedPassword]
@@ -21,30 +19,13 @@ export const register = async (req: Request, res: Response) => {
       
       const userId = userResult.rows[0].id;
       
-      // Insert user interests
-      for (const interest of interests) {
-        // Get interest id
-        const interestResult = await client.query(
-          'SELECT id FROM interests WHERE name = $1',
-          [interest]
-        );
-        const interestId = interestResult.rows[0].id;
-        
-        // Create user-interest relationship
-        await client.query(
-          'INSERT INTO user_interests (user_id, interest_id) VALUES ($1, $2)',
-          [userId, interestId]
-        );
-      }
-      
       await client.query('COMMIT');
       
       res.status(201).json({
         user: {
           id: userId,
           name,
-          email,
-          interests
+          email
         }
       });
     } catch (err) {

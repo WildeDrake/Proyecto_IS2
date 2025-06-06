@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authService } from '../services/authService';
+import { obtenerActividades, updateUserInterests } from '../services/interests';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import '../styles/Auth.css';
+
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -11,23 +13,26 @@ const RegisterPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [interests, setInterests] = useState<string[]>([]);
+  const [interesesElegidos, setInterests] = useState<any[]>([]);
+  const [actividades, setActividades] = useState<any[]>([]);
 
-  const availableInterests = [
-    'Deporte al aire Libre',
-    'Salir a Caminar',
-    'Jugar Futbol',
-    'Ir a la Playa',
-    'Hacer Picnic',
-    'Correr',
-    'Jugar Tenis',
-  ];
+  useEffect(() => {
+    const fetchActividades = async () => {
+      try {
+        const data = await obtenerActividades();
+        setActividades(data);
+      } catch (error) {
+        console.error("Error al obtener actividades:", error);
+      }
+    };
+    fetchActividades();
+  }, []);
 
-  const handleInterestChange = (interest: string) => {
-    setInterests(prev => 
-      prev.includes(interest)
-        ? prev.filter(i => i !== interest)
-        : [...prev, interest]
+  const handleInterestChange = (actividad: any) => {
+    setInterests(prev =>
+      prev.some(i => i.id === actividad.id)
+        ? prev.filter(i => i.id !== actividad.id)
+        : [...prev, actividad]
     );
   };
 
@@ -62,14 +67,17 @@ const RegisterPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await authService.register(name, email, password, interests);
-      const token = await authService.login(email, password);
+      await authService.register(name, email, password);
+      const token = await authService.login(email, password); 
       if (token) {
         localStorage.setItem('token', token);
+        const interesesNombres = interesesElegidos.map(i => i.name);
+        await updateUserInterests(interesesNombres);
         navigate('/');
       }
     } catch (err) {
-      setError('Error');
+      setError('Error al registrarse. Verifica tus datos.');
+      console.error(err);
     }
   };
 
@@ -126,14 +134,14 @@ const RegisterPage = () => {
             <div className="form-group">
               <label>Intereses:</label>
               <div className="interests-grid">
-                {availableInterests.map((interest) => (
-                  <label key={interest} className="interest-checkbox">
+                {actividades.map((actividad) => (
+                  <label key={actividad.id}>
                     <input
                       type="checkbox"
-                      checked={interests.includes(interest)}
-                      onChange={() => handleInterestChange(interest)}
+                      checked={interesesElegidos.some(i => i.id === actividad.id)}
+                      onChange={() => handleInterestChange(actividad)}
                     />
-                    {interest}
+                    {actividad.name}
                   </label>
                 ))}
               </div>

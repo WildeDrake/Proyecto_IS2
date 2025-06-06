@@ -63,7 +63,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onToggleForm }) 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await authService.register(name, email, password, interests);
+      await authService.register(name, email, password);
       const token = await authService.login(email, password);
       if (token) {
         localStorage.setItem('token', token);

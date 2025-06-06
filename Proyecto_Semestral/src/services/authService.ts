@@ -1,13 +1,13 @@
 const API_URL = 'http://localhost:5000/api/auth';
 
 export const authService = {
-  async register(name: string, email: string, password: string, interests: string[]) {
+  async register(name: string, email: string, password: string) {
     const response = await fetch(`${API_URL}/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name, email, password, interests }),
+      body: JSON.stringify({ name, email, password }),
     });
 
     if (!response.ok) {
