@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { WeatherData } from "../types/weather";
+import { fetchForecast } from "../services/weatherService";
 import { getRecoPersonalizada } from "../utils/recoPersonalizada";
 import { getRecoGenerica } from "../utils/recoGenerica";
 
@@ -12,14 +13,24 @@ const WeatherDetails: React.FC<{ weather: WeatherData }> = ({ weather }) => {
   const [isLogged, setIsLogged] = useState<boolean>(false);
 
   useEffect(() => {
+
+    const calcularProbabilidadLluvia = (forecastData: any): boolean => {
+      const bloques = forecastData.list.slice(0, 2); // Primeras 6 horas (2 bloques de 3h)
+      const totalPop = bloques.reduce((acc: number, bloque: any) => acc + (bloque.pop ?? 0), 0);
+      const promedioPop = totalPop / bloques.length;
+      return promedioPop >= 0.4;
+    };
+
     const fetchRecomendaciones = async () => {
+      const forecastData = await fetchForecast(weather.name);
+        const lluviaa = calcularProbabilidadLluvia(forecastData);
       const condiciones = {
         weather_main: weather.weather[0].main,
         temp: weather.main.temp,
         viento: weather.wind.speed,
         humedad: weather.main.humidity,
-        visibilidad: weather.visibility || 0,
-        lluvia: weather.rain ? weather.rain["1h"] || 0 : 0
+        visibilidad: weather.visibility ?? 10000,
+        lluvia: lluviaa,
       };
 
       const token = localStorage.getItem("token");
@@ -48,7 +59,7 @@ const WeatherDetails: React.FC<{ weather: WeatherData }> = ({ weather }) => {
       if (r5) recoGenericas.push(r5);
       const r6 = await getRecoGenerica('visibility', condiciones.visibilidad);
       if (r6) recoGenericas.push(r6);
-      const r7 = await getRecoGenerica('rain.pop', condiciones.lluvia);
+      const r7 = await getRecoGenerica('rain.pop', 0);
       if (r7) recoGenericas.push(r7);
       setRecoGenericas(recoGenericas);
     };

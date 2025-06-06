@@ -1,26 +1,23 @@
 import { obtenerActividades } from '../services/interests';
 
-const CLIMA_IDS: Record<string, number> = {
-  Clear: 1,
-  Clouds: 2,
-  Rain: 3,
-  Snow: 4,
-  Thunderstorm: 5,
-  Drizzle: 6,
-  Mist: 7,
-  Smoke: 8,
-  Haze: 9,
-  Dust: 10,
-  Fog: 11,
-  Sand: 12,
-  Ash: 13,
-  Squall: 14,
-  Tornado: 15
+const CLIMA_IDS: Record<string, number> = { // 
+  Clear: 0,
+  Clouds: 1,
+  Rain: 2,
+  Snow: 3,
+  Thunderstorm: 4,
+  Drizzle: 5,
+  Mist: 6,
+  Haze: 7,
+  Dust: 8,
+  Fog: 9,
+  Ash: 10,
+  Squall: 11,
 };
 
 export async function getActRecomendadas(condiciones: any) {
   const actividades = await obtenerActividades();
-  const climaId = CLIMA_IDS[condiciones.weather_main];
+  const climaId = CLIMA_IDS[condiciones.weather_main] || 0;
 
   const actividadesValidas = actividades.filter((act: any) =>
     cumpleCondiciones(act, condiciones, climaId)
