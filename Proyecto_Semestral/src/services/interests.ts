@@ -1,7 +1,7 @@
 const API_URL = 'http://localhost:5000/api/interests';
 
 export async function obtenerActividades() {
-  const res = await fetch(`${API_URL}/getAllInterests`);
+  const res = await fetch(API_URL);
   if (!res.ok) throw new Error('Error al obtener actividades');
   return await res.json();
 }
@@ -12,8 +12,8 @@ export async function updateUserInterests(interests: string[]) {
     throw new Error('No token found');
   }
 
-  const res = await fetch(`${API_URL}/updateUserInterests`, {
-    method: 'POST',
+  const res = await fetch(API_URL, {
+    method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
@@ -33,7 +33,7 @@ export async function getUserInterests() {
   if (!token) {
     throw new Error('No token found');
   }
-  const res = await fetch(`${API_URL}/getUserInterests`, {
+  const res = await fetch(`${API_URL}/user`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
