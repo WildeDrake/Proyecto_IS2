@@ -4,8 +4,8 @@ import { authService } from "../services/authService";
 export default function LogoutButton() {
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    authService.logout();
+  const handleLogout = async () => {
+    await authService.logout();
     navigate("/login");
   };
 
