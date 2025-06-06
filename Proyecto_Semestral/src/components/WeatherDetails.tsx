@@ -11,9 +11,9 @@ const WeatherDetails: React.FC<{ weather: WeatherData }> = ({ weather }) => {
   >(null);
   const [recomendacionBase, setRecomendacionBase] = useState<string>("");
   const [isLogged, setIsLogged] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-
     const calcularProbabilidadLluvia = (forecastData: any): boolean => {
       const bloques = forecastData.list.slice(0, 2); // Primeras 6 horas (2 bloques de 3h)
       const totalPop = bloques.reduce((acc: number, bloque: any) => acc + (bloque.pop ?? 0), 0);
@@ -22,50 +22,56 @@ const WeatherDetails: React.FC<{ weather: WeatherData }> = ({ weather }) => {
     };
 
     const fetchRecomendaciones = async () => {
-      const forecastData = await fetchForecast(weather.name);
+      setIsLoading(true);
+      try {
+        const forecastData = await fetchForecast(weather.name);
         const lluviaa = calcularProbabilidadLluvia(forecastData);
-      const condiciones = {
-        weather_main: weather.weather[0].main,
-        temp: weather.main.temp,
-        viento: weather.wind.speed,
-        humedad: weather.main.humidity,
-        visibilidad: weather.visibility ?? 10000,
-        lluvia: lluviaa,
-      };
+        const condiciones = {
+          weather_main: weather.weather[0].main,
+          temp: weather.main.temp,
+          viento: weather.wind.speed,
+          humedad: weather.main.humidity,
+          visibilidad: weather.visibility ?? 10000,
+          lluvia: lluviaa,
+        };
 
-      const token = localStorage.getItem("token");
-      setIsLogged(!!token);
+        const token = localStorage.getItem("token");
+        setIsLogged(!!token);
 
-      if (token) {
-        try {
+        if (token) {
           const recoPersonalizada = await getRecoPersonalizada(condiciones);
           setRecomendacionBase(recoPersonalizada.recomendacionBase);
-          if (recoPersonalizada?.actividades?.length > 0) {
-            setActividadRecomendadas(recoPersonalizada.actividades);
-          }
-        } catch (err) {
-          console.error("Error al obtener recomendación personalizada:", err);
+          setActividadRecomendadas(recoPersonalizada.actividades);
         }
+
+        // Obtener recomendaciones genéricas
+        const recoGenericasTemp = [];
+        const r1 = await getRecoGenerica('weather_main', condiciones.weather_main);
+        if (r1) recoGenericasTemp.push(r1);
+        const r2 = await getRecoGenerica('temp', condiciones.temp);
+        if (r2) recoGenericasTemp.push(r2);
+        const r3 = await getRecoGenerica('humidity', condiciones.humedad);
+        if (r3) recoGenericasTemp.push(r3);
+        const r5 = await getRecoGenerica('wind_speed', condiciones.viento);
+        if (r5) recoGenericasTemp.push(r5);
+        const r6 = await getRecoGenerica('visibility', condiciones.visibilidad);
+        if (r6) recoGenericasTemp.push(r6);
+        const r7 = await getRecoGenerica('rain.pop', 0);
+        if (r7) recoGenericasTemp.push(r7);
+        setRecoGenericas(recoGenericasTemp);
+      } catch (error) {
+        console.error("Error al obtener recomendaciones:", error);
+      } finally {
+        setIsLoading(false);
       }
-      
-      recoGenericas.length = 0;
-      const r1 = await getRecoGenerica('weather_main', condiciones.weather_main);
-      if (r1) recoGenericas.push(r1);
-      const r2 = await getRecoGenerica('temp', condiciones.temp);
-      if (r2) recoGenericas.push(r2);
-      const r3 = await getRecoGenerica('humidity', condiciones.humedad);
-      if (r3) recoGenericas.push(r3);
-      const r5 = await getRecoGenerica('wind_speed', condiciones.viento);
-      if (r5) recoGenericas.push(r5);
-      const r6 = await getRecoGenerica('visibility', condiciones.visibilidad);
-      if (r6) recoGenericas.push(r6);
-      const r7 = await getRecoGenerica('rain.pop', 0);
-      if (r7) recoGenericas.push(r7);
-      setRecoGenericas(recoGenericas);
     };
 
     fetchRecomendaciones();
   }, [weather]);
+
+  if (isLoading) {
+    return <div>Cargando recomendaciones...</div>;
+  }
 
   return (
     <div className="flex gap-4 items-start">

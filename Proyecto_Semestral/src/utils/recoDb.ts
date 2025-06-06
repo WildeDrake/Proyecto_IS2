@@ -1,4 +1,4 @@
-import { obtenerActividades } from '../services/interests';
+import { obtenerActividades, getUserInterests } from '../services/interests';
 
 const CLIMA_IDS: Record<string, number> = { // 
   Clear: 0,
@@ -16,24 +16,60 @@ const CLIMA_IDS: Record<string, number> = { //
 };
 
 export async function getActRecomendadas(condiciones: any) {
-  const actividades = await obtenerActividades();
-  const climaId = CLIMA_IDS[condiciones.weather_main] || 999;
+  try {
+    // Obtener las actividades y los intereses del usuario
+    const actividades = await obtenerActividades();
+    const userInterests = await getUserInterests();
+    const userInterestNames = userInterests.map((interest: any) => interest.name);
+    
+    const climaId = CLIMA_IDS[condiciones.weather_main] || 999;
 
-  const actividadesValidas = actividades.filter((act: any) =>
-    cumpleCondiciones(act, condiciones, climaId)
-  );
+    // Filtrar primero por intereses del usuario y luego por condiciones climáticas
+    const actividadesValidas = actividades
+      .filter((act: any) => userInterestNames.includes(act.name))
+      .filter((act: any) => cumpleCondiciones(act, condiciones, climaId));
 
-  if (actividadesValidas.length === 0) {
+    if (actividadesValidas.length === 0) {
+      return [{
+        actividad: "Sin coincidencias",
+        recomendacion: "No hay actividades de tu interés que coincidan con el clima actual."
+      }];
+    }
+
+    // Obtener recomendaciones personalizadas del CSV
+    const response = await fetch('/tablaPersonalizada.csv?cache_burst=${Date.now()}');
+    const csvText = await response.text();
+    const recomendaciones = parseCSVPersonalizado(csvText);
+
+    return actividadesValidas.map((act: any) => ({
+      actividad: act.name,
+      recomendacion: obtenerRecomendacionPersonalizada(act.name, recomendaciones)
+    }));
+  } catch (error) {
+    console.error('Error al obtener recomendaciones:', error);
     return [{
-      actividad: "Sin coincidencias",
-      recomendacion: "Ninguna actividad coincide con las condiciones actuales. ¡Pero aún puedes disfrutar tu día!"
+      actividad: "Error",
+      recomendacion: "No se pudieron cargar las recomendaciones personalizadas."
     }];
   }
+}
 
-  return actividadesValidas.map((act: any) => ({
-    actividad: act.name,
-    recomendacion: `Ideal para un clima como el de hoy.`
-  }));
+function parseCSVPersonalizado(csv: string) {
+  const lines = csv.split('\n').slice(1); // Ignorar encabezado
+  const recomendaciones: Record<string, string> = {};
+  
+  lines.forEach(line => {
+    const [actividad, , , , , , , recomendacion] = line.split(',');
+    if (actividad && recomendacion) {
+      recomendaciones[actividad.trim()] = recomendacion.trim();
+    }
+  });
+  
+  return recomendaciones;
+}
+
+function obtenerRecomendacionPersonalizada(actividad: string, recomendaciones: Record<string, string>): string {
+  return recomendaciones[actividad] || 'Ideal para un clima como el de hoy.';
 }
 
 function cumpleCondiciones(actividad: any, cond: any, climaId: number): boolean {
