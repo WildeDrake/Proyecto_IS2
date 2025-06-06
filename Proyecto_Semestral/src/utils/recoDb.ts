@@ -17,7 +17,7 @@ const CLIMA_IDS: Record<string, number> = { //
 
 export async function getActRecomendadas(condiciones: any) {
   const actividades = await obtenerActividades();
-  const climaId = CLIMA_IDS[condiciones.weather_main] || 0;
+  const climaId = CLIMA_IDS[condiciones.weather_main] || 999;
 
   const actividadesValidas = actividades.filter((act: any) =>
     cumpleCondiciones(act, condiciones, climaId)
