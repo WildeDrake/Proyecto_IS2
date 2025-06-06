@@ -14,7 +14,6 @@ import { fetchWeather, fetchForecast } from "../services/weatherService";
 import { Geolocalizar } from "../services/Geolocalizar";
 import useFavorites from "../hooks/useFavorites";
 import LoginForm from './LoginForm';
-import RegisterForm from './RegisterForm';
 import { useLocation } from 'react-router-dom';
 
 interface LandingPageProps {
@@ -322,23 +321,14 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
             >
               ×
             </button>
-            {isLogin ? (
-              <LoginForm 
+            {<LoginForm 
                 onSuccess={() => {
                   handleAuthSuccess();
                   setShowAuthModal(false);
                 }} 
                 onToggleForm={toggleAuthForm} 
-              />
-            ) : (
-              <RegisterForm 
-                onSuccess={() => {
-                  handleAuthSuccess();
-                  setShowAuthModal(false);
-                }} 
-                onToggleForm={toggleAuthForm} 
-              />
-            )}
+              />  
+            }
           </div>
         </div>
       )}
