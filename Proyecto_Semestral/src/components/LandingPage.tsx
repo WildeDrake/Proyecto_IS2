@@ -115,6 +115,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
   const handleAuthSuccess = () => {
     setIsAuthenticated(true);
     setShowAuthModal(false);
+    window.location.reload();
   };
 
   const toggleAuthForm = () => {
@@ -327,7 +328,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
                   setShowAuthModal(false);
                 }} 
                 onToggleForm={toggleAuthForm} 
-              />  
+              />
+  
             }
           </div>
         </div>

@@ -35,11 +35,10 @@ const Dashboard: React.FC = () => {
   const [actividades, setActividades] = useState<any[]>([]);
   const handleLogout = () => {
     authService.logout();
-    navigate('/'); //window.location.href = '/'; se puede usar eso para refrescar pagina en vez de navigate
+    window.location.assign('/');
   };
   useEffect(() => {
     if (!localStorage.getItem('token')) {
-      navigate('/');
     }
   }, [navigate]);
 

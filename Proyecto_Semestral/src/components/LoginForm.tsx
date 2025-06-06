@@ -49,7 +49,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onToggleForm }) => {
       if (token) {
         localStorage.setItem('token', token);
         onSuccess();
-        window.location.assign('/');
       }
     } catch (err: any) {
       // Mostrar el mensaje de error específico del backend
