@@ -5,19 +5,59 @@ import pool from '../config/database';
 
 export const register = async (req: Request, res: Response) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, interests } = req.body;
+    
+    // Validaciones básicas
+    if (!name || !email || !password) {
+      return res.status(400).json({ error: 'Todos los campos son requeridos' });
+    }
+    
     const hashedPassword = await bcrypt.hash(password, 10);
     
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
       
+      // Verificar si el email ya existe
+      const existingUser = await client.query(
+        'SELECT id FROM users WHERE email = $1',
+        [email]
+      );
+      
+      if (existingUser.rows.length > 0) {
+        await client.query('ROLLBACK');
+        return res.status(400).json({ error: 'El email ya está registrado' });
+      }
+      
+      // Crear usuario
       const userResult = await client.query(
         'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id',
         [name, email, hashedPassword]
       );
       
       const userId = userResult.rows[0].id;
+      
+      // Si hay intereses, insertarlos
+      if (interests && interests.length > 0) {
+        // Verificar que todos los intereses existan
+        const interestsCheck = await client.query(
+          'SELECT id FROM interests WHERE id = ANY($1::int[])',
+          [interests]
+        );
+        
+        if (interestsCheck.rows.length !== interests.length) {
+          await client.query('ROLLBACK');
+          return res.status(400).json({ error: 'Algunos intereses no son válidos' });
+        }
+        
+        // Insertar los intereses del usuario
+        for (const interestId of interests) {
+          await client.query(
+            'INSERT INTO user_interests (user_id, interest_id) VALUES ($1, $2)',
+            [userId, interestId]
+          );
+        }
+      }
       
       await client.query('COMMIT');
       
@@ -28,8 +68,14 @@ export const register = async (req: Request, res: Response) => {
           email
         }
       });
-    } catch (err) {
+    } catch (err: any) {
       await client.query('ROLLBACK');
+      
+      // Manejar errores específicos de base de datos
+      if (err.code === '23505') { // Unique violation
+        return res.status(400).json({ error: 'El email ya está registrado' });
+      }
+      
       throw err;
     } finally {
       client.release();

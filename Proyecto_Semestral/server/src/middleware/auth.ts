@@ -35,27 +35,3 @@ export const authenticateToken = async (req: Request, res: Response, next: NextF
     return res.status(403).json({ error: 'Token inválido' });
   }
 };
-export const logout = async (req: Request, res: Response) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(400).json({ message: 'Token no proporcionado' });
-  }
-
-  const token = authHeader.split(' ')[1];
-
-  try {
-    const secret = process.env.JWT_SECRET || 'default_secret';
-    const decoded: any = jwt.verify(token, secret);
-
-    const expiresAt = new Date(decoded.exp * 1000);
-    // Insertamos el token en la tabla de blacklist
-    await pool.query(
-      'INSERT INTO blacklisted_tokens (token, expires_en) VALUES ($1, $2)',
-      [token, expiresAt]
-    );
-
-    return res.status(200).json({ message: 'Sesión cerrada correctamente' });
-  } catch (error) {
-    return res.status(400).json({ message: 'Token inválido o expirado' });
-  }
-};

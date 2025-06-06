@@ -42,16 +42,17 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onToggleForm }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
+    
     try {
       const token = await authService.login(email, password);
       if (token) {
         localStorage.setItem('token', token);
         onSuccess();
-      } else {
-        setError('Error');
       }
-    } catch (err) {
-      setError('Error');
+    } catch (err: any) {
+      // Mostrar el mensaje de error específico del backend
+      setError(err.message || 'Error al iniciar sesión');
     }
   };
 
