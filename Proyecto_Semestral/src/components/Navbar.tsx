@@ -28,7 +28,7 @@ const Navbar: React.FC<NavbarProps> = ({
       localStorage.removeItem('token');
       localStorage.clear();
       setIsAuthenticated(false);
-      navigate('/');
+      window.location.assign('/');
     } else {
       // Navegar a la landing page con estado para mostrar login
       navigate('/', { state: { showLogin: true } });

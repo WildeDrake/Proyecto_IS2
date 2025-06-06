@@ -137,7 +137,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
                 localStorage.removeItem('token');
                 localStorage.clear();
                 setIsAuthenticated(false);
-                navigate('/');
+                window.location.assign('/');
               } else {
                 setShowAuthModal(true);
                 setIsLogin(true);
