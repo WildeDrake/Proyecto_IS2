@@ -1,6 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { authService } from '../services/authService';
+import { interestsService } from '../services/interestsService';
 import '../styles/Auth.css';
+
+interface Interest {
+  id: number;
+  name: string;
+  temp_min?: number;
+  temp_max?: number;
+  humidity_min?: number;
+  humidity_max?: number;
+}
 
 interface RegisterFormProps {
   onSuccess: () => void;
@@ -12,23 +22,31 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onToggleForm }) 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [interests, setInterests] = useState<string[]>([]);
+  const [selectedInterests, setSelectedInterests] = useState<number[]>([]);
+  const [availableInterests, setAvailableInterests] = useState<Interest[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const availableInterests = [
-    'Deporte al aire Libre',
-    'Salir a Caminar',
-    'Jugar Futbol',
-    'Ir a la Playa',
-    'Hacer Picnic',
-    'Correr',
-    'Jugar Tenis',
-  ];
+  useEffect(() => {
+    // Cargar intereses disponibles del backend
+    const loadInterests = async () => {
+      try {
+        const interests = await interestsService.getAllInterests();
+        setAvailableInterests(interests);
+      } catch (err) {
+        console.error('Error al cargar intereses:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadInterests();
+  }, []);
 
-  const handleInterestChange = (interest: string) => {
-    setInterests(prev => 
-      prev.includes(interest)
-        ? prev.filter(i => i !== interest)
-        : [...prev, interest]
+  const handleInterestChange = (interestId: number) => {
+    setSelectedInterests(prev => 
+      prev.includes(interestId)
+        ? prev.filter(id => id !== interestId)
+        : [...prev, interestId]
     );
   };
 
@@ -62,15 +80,21 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onToggleForm }) 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
+    
     try {
-      await authService.register(name, email, password);
+      // Registrar usuario con intereses
+      await authService.register(name, email, password, selectedInterests);
+      
+      // Hacer login automático después del registro
       const token = await authService.login(email, password);
       if (token) {
         localStorage.setItem('token', token);
         onSuccess();
       }
-    } catch (err) {
-      setError('Error');
+    } catch (err: any) {
+      // Mostrar el mensaje de error específico del backend
+      setError(err.message || 'Error al registrar usuario');
     }
   };
 
@@ -123,18 +147,22 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onToggleForm }) 
         </div>
         <div className="form-group">
           <label>Intereses:</label>
-          <div className="interests-grid">
-            {availableInterests.map((interest) => (
-              <label key={interest} className="interest-checkbox">
-                <input
-                  type="checkbox"
-                  checked={interests.includes(interest)}
-                  onChange={() => handleInterestChange(interest)}
-                />
-                {interest}
-              </label>
-            ))}
-          </div>
+          {loading ? (
+            <p>Cargando intereses...</p>
+          ) : (
+            <div className="interests-grid">
+              {availableInterests.map((interest) => (
+                <label key={interest.id} className="interest-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={selectedInterests.includes(interest.id)}
+                    onChange={() => handleInterestChange(interest.id)}
+                  />
+                  {interest.name}
+                </label>
+              ))}
+            </div>
+          )}
         </div>
         <button type="submit" className="auth-button">Registrarse</button>
       </form>
