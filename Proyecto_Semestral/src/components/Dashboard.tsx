@@ -4,6 +4,7 @@ import { userService } from '../services/userService';
 import { obtenerActividades, updateUserInterests } from '../services/interests';
 import { authService } from '../services/authService';
 import '../styles/Dashboard.css';
+import AddActividadModal from './AddActividadModal';
 
 
 interface UserProfile {
@@ -33,6 +34,8 @@ const Dashboard: React.FC = () => {
   });
   const [password, setPassword] = useState('');
   const [actividades, setActividades] = useState<any[]>([]);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [nuevasActividades, setNuevasActividades] = useState<any[]>([]);
   const handleLogout = () => {
     authService.logout();
     window.location.assign('/');
@@ -119,6 +122,12 @@ const Dashboard: React.FC = () => {
           onClick={() => setActiveSection('interests')}
         >
           Intereses
+        </button>
+        <button 
+          className={`sidebar-button ${activeSection === 'myInterests' ? 'active' : ''}`}
+          onClick={() => setActiveSection('myInterests')}
+        >
+          Mis Intereses
         </button>
         <button 
           className="sidebar-button"
@@ -245,6 +254,38 @@ const Dashboard: React.FC = () => {
               Actualizar Intereses
             </button>
           </div>
+        )}
+
+        {activeSection === 'myInterests' && (
+          <div className="interests-section">
+            <h2>Mis Intereses</h2>
+            <div className="interests-grid">
+              {actividades
+                .filter((actividad) => editedProfile.interests.includes(actividad.name))
+                .map((actividad) => (
+                  <div key={actividad.id} className="interest-item">
+                    {actividad.name}
+                  </div>
+                ))}
+              {editedProfile.interests.length === 0 && (
+                <p>No tienes intereses seleccionados.</p>
+              )}
+            </div>
+            <button
+              className="add-interest-button"
+              onClick={() => setShowAddModal(true)}
+              style={{ marginTop: '16px' }}
+            >
+              + Añadir
+            </button>
+          </div>
+        )}
+
+        {showAddModal && (
+          <AddActividadModal
+            onClose={() => setShowAddModal(false)}
+            onAdd={(actividad) => setNuevasActividades(prev => [...prev, actividad])}
+          />
         )}
       </div>
     </div>
