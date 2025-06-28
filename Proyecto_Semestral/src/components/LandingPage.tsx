@@ -126,8 +126,14 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
     <div className="landing-page">
       {/* Navbar */}
       <nav className="navbar">
-        <div className="navbar-brand">Tu Clima</div>
-
+        <div className="navbar-brand">
+          <img 
+            src="/images/logo.jpg" 
+            alt="Weather App Logo" 
+            className="navbar-logo"
+          />
+        </div>
+        
         <div className="navbar-actions">
           <button 
             className="btn-login" 

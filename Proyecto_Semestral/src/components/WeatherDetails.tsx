@@ -3,6 +3,7 @@ import { WeatherData } from "../types/weather";
 import { fetchForecast } from "../services/weatherService";
 import { getRecoPersonalizada } from "../utils/recoPersonalizada";
 import { getRecoGenerica } from "../utils/recoGenerica";
+import '../styles/WeatherDetails.css';
 
 const WeatherDetails: React.FC<{ weather: WeatherData }> = ({ weather }) => {
   const [recoGenericas, setRecoGenericas] = useState<string[]>([]);
@@ -79,7 +80,7 @@ const WeatherDetails: React.FC<{ weather: WeatherData }> = ({ weather }) => {
         src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
         alt="Icono del clima"
       />
-      <div>
+      <div className="weather-recommendations">
         <p className="capitalize">{weather.weather[0].description}</p>
         <p className="text-2xl font-bold">
           La temperatura actual es de: {Math.round(weather.main.temp)}°C
@@ -89,10 +90,10 @@ const WeatherDetails: React.FC<{ weather: WeatherData }> = ({ weather }) => {
 
         {/* Personalizadas (si está logueado) */}
         {isLogged && actividadRecomendadas && actividadRecomendadas.length > 0 && (
-          <div className="mt-4 bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
-            <h3 className="font-semibold text-blue-700 text-lg mb-2">🌟 Recomendaciones Personalizadas</h3>
-            <h4 className="list-disc list-inside text-blue-900 space-y-1"> {recomendacionBase}</h4>
-            <ul className="list-disc list-inside text-blue-900 space-y-1">
+          <div className="recommendations-personalized">
+            <h3>🌟 Recomendaciones Personalizadas</h3>
+            <h4>{recomendacionBase}</h4>
+            <ul>
               {actividadRecomendadas.map((act, index) => (
                 <li key={index}>
                   <strong>{act.actividad}:</strong> {act.recomendacion}
@@ -104,9 +105,9 @@ const WeatherDetails: React.FC<{ weather: WeatherData }> = ({ weather }) => {
 
         {/* Generales (siempre visibles) */}
         {recoGenericas.length > 0 && (
-          <div className="mt-4 bg-gray-100 border-l-4 border-gray-400 p-4 rounded">
-            <h3 className="font-semibold text-gray-700 text-lg mb-2">📋 Recomendaciones Generales</h3>
-            <ul className="list-disc list-inside text-gray-800 space-y-1">
+          <div className="recommendations-general">
+            <h3>📋 Recomendaciones Generales</h3>
+            <ul>
               {recoGenericas.map((reco, index) => (
                 <li key={index}>{reco}</li>
               ))}

@@ -1,0 +1,106 @@
+.weather-recommendations {
+  margin-top: 2rem;
+  width: 100%;
+}
+
+/* Estilos para recomendaciones personalizadas */
+.recommendations-personalized {
+  background: linear-gradient(135deg, #e6f3ff 0%, #f0f7ff 100%);
+  border-left: 6px solid #3b82f6;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.recommendations-personalized:hover {
+  transform: translateY(-3px);
+}
+
+.recommendations-personalized h3 {
+  color: #1e40af;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.recommendations-personalized h4 {
+  color: #1e3a8a;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background-color: rgba(59, 130, 246, 0.1);
+  border-radius: 6px;
+}
+
+.recommendations-personalized ul {
+  list-style: none;
+  padding: 0;
+}
+
+.recommendations-personalized li {
+  margin: 0.8rem 0;
+  padding: 0.8rem;
+  background-color: rgba(255, 255, 255, 0.6);
+  border-radius: 8px;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.recommendations-personalized li::before {
+  content: "🎯";
+  flex-shrink: 0;
+}
+
+.recommendations-personalized strong {
+  color: #2563eb;
+  margin-right: 0.5rem;
+}
+
+/* Estilos para recomendaciones generales */
+.recommendations-general {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-left: 6px solid #64748b;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 15px rgba(100, 116, 139, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.recommendations-general:hover {
+  transform: translateY(-3px);
+}
+
+.recommendations-general h3 {
+  color: #334155;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.recommendations-general ul {
+  list-style: none;
+  padding: 0;
+}
+
+.recommendations-general li {
+  margin: 0.8rem 0;
+  padding: 0.8rem;
+  background-color: rgba(255, 255, 255, 0.6);
+  border-radius: 8px;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  color: #475569;
+}
+
+.recommendations-general li::before {
+  content: "💡";
+  flex-shrink: 0;
+}
