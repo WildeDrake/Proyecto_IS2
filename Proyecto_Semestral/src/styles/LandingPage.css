@@ -100,7 +100,10 @@ body {
   flex-direction: column;
   min-height: 100vh;
 }
-
+.navbar-logo {
+  height: 50px; /* o el tamaño que prefieras */
+  width: auto;
+}
 /* Barra de navegación */
 .navbar {
   display: flex;

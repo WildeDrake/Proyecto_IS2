@@ -15,6 +15,7 @@ import { Geolocalizar } from "../services/Geolocalizar";
 import useFavorites from "../hooks/useFavorites";
 import LoginForm from './LoginForm';
 import { useLocation } from 'react-router-dom';
+import { reverseGeocode } from "../services/reverseGeocode";
 
 interface LandingPageProps {
   onWeatherSearch?: (city: string) => void;
@@ -53,6 +54,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
     { id: 5, image: '/activities/ski.jpg', alt: 'Esquí' },
   ];
   const [userCoords, setUserCoords] = useState<[number, number] | null>(null);
+  const [detectedCity, setDetectedCity] = useState<string>("");
 
   const location = useLocation();
 
@@ -61,8 +63,17 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
       try {
         const ubicacion = await Geolocalizar();
         setUserCoords([ubicacion.lat, ubicacion.lon]);
+        // Obtener ciudad real usando reverseGeocode
+        const direccion = await reverseGeocode(ubicacion.lat, ubicacion.lon);
+        // Extraer solo la ciudad (antes de la primera coma)
+        const ciudad = direccion.split(",")[0].trim();
+        setDetectedCity(ciudad);
+        // Buscar clima automáticamente para la ciudad detectada
+        await handleFetchWeather(ciudad, "");
       } catch (error) {
         console.error("No se pudo obtener la ubicación del usuario");
+        // Si falla, puedes dejar el fallback a Concepción si lo deseas
+        await handleFetchWeather("Concepción", "");
       }
     };
     getCoords();
@@ -128,7 +139,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
       <nav className="navbar">
         <div className="navbar-brand">
           <img 
-            src="/images/logo.jpg" 
+            src="/images/logo.png" 
             alt="Weather App Logo" 
             className="navbar-logo"
           />
@@ -166,7 +177,9 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
       {/* Hero Section con información del clima */}
       <div className="hero-section">
         <div className="weather-card">
-          <h1>{weather ? weather.name : "Cargando..."}</h1>
+          <h1>
+            {weather ? weather.name : detectedCity || "Cargando..."}
+          </h1>
           <div className="weather-info">
             <div>
               <p className="day">{dayName}</p>
