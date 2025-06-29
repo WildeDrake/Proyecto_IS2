@@ -1,4 +1,4 @@
-import { obtenerActividades } from '../services/interests';
+import { getOnUserInterests } from '../services/interests';
 
 const CLIMA_IDS: Record<string, number> = { // 
   Clear: 0,
@@ -16,9 +16,10 @@ const CLIMA_IDS: Record<string, number> = { //
 };
 
 export async function getActRecomendadas(condiciones: any) {
-  const actividades = await obtenerActividades();
-  const climaId = CLIMA_IDS[condiciones.weather_main] || 999;
-
+  const actividades = await getOnUserInterests();
+  const weatherKey = condiciones.weather_main?.charAt(0).toUpperCase() + condiciones.weather_main?.slice(1).toLowerCase();
+  const climaId = CLIMA_IDS[weatherKey] ?? 999;
+  
   const actividadesValidas = actividades.filter((act: any) =>
     cumpleCondiciones(act, condiciones, climaId)
   );
@@ -31,8 +32,8 @@ export async function getActRecomendadas(condiciones: any) {
   }
 
   return actividadesValidas.map((act: any) => ({
-    actividad: act.name,
-    recomendacion: `Ideal para un clima como el de hoy.`
+    ...act,
+    recomendacion: `Ideales para un clima como el de hoy.`
   }));
 }
 
@@ -40,7 +41,7 @@ function cumpleCondiciones(actividad: any, cond: any, climaId: number): boolean 
   const climaOK = actividad.climas_permitidos.includes(climaId);
   const lluviaOK = !(actividad.requiere_sin_lluvia && cond.lluvia);
 
-  return (
+  const resultado = (
     climaOK &&
     cond.temp >= actividad.temp_min && cond.temp <= actividad.temp_max &&
     cond.viento >= actividad.viento_min && cond.viento <= actividad.viento_max &&
@@ -48,6 +49,8 @@ function cumpleCondiciones(actividad: any, cond: any, climaId: number): boolean 
     cond.visibilidad >= actividad.vis_min_km &&
     lluviaOK
   );
+  
+  return resultado;
 }
 
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { userService } from '../services/userService';
-import { obtenerActividades, updateUserInterests } from '../services/interests';
+import { getUserInterests, updateInterestState } from '../services/interests';
 import { authService } from '../services/authService';
 import '../styles/Dashboard.css';
 
@@ -11,7 +11,6 @@ interface UserProfile {
   email: string;
   interests: string[];
 }
-
 
 
 const Dashboard: React.FC = () => {
@@ -62,7 +61,7 @@ const Dashboard: React.FC = () => {
     const cargarDatos = async () => {
       try {
         const userData = await userService.getProfile();
-        const data = await obtenerActividades();
+        const data = await getUserInterests();
 
         setProfile(userData);
         setEditedProfile(userData);
@@ -215,35 +214,27 @@ const Dashboard: React.FC = () => {
                 <label key={actividad.id} className="interest-item">
                   <input
                     type="checkbox"
-                    checked={editedProfile.interests.includes(actividad.name)}
-                    onChange={(e) => {
-                      const newInterests = e.target.checked
-                        ? [...editedProfile.interests, actividad.name]
-                        : editedProfile.interests.filter(i => i !== actividad.name);
-                      setEditedProfile({
-                        ...editedProfile,
-                        interests: newInterests
-                      });
+                    checked={actividad.estado}
+                    onChange={async (e) => {
+                      const nuevoEstado = e.target.checked;
+                      try {
+                        await updateInterestState(actividad.id, nuevoEstado);
+                        // Actualizamos localmente el estado de esa actividad
+                        setActividades((prev) =>
+                          prev.map((a) =>
+                            a.id === actividad.id ? { ...a, estado: nuevoEstado } : a
+                          )
+                        );
+                        setMessage('Estado actualizado correctamente');
+                      } catch (err) {
+                        setError('Error al cambiar el estado');
+                      }
                     }}
                   />
                   {actividad.name}
                 </label>
               ))}
             </div>
-            <button onClick={async () => {
-              try {
-                await updateUserInterests(editedProfile.interests);
-                setProfile({ ...profile, interests: editedProfile.interests });
-                setMessage('Intereses actualizados correctamente');
-                setError(null);
-              } catch (error) {
-                setMessage(null);
-                setError('No se pudieron actualizar los intereses');
-
-              }
-            }}>
-              Actualizar Intereses
-            </button>
           </div>
         )}
       </div>
