@@ -1,299 +1,348 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { userService } from '../services/userService';
-import { createInterest, getUserInterests, updateInterest, deleteInterest } from '../services/interests';
-import { authService } from '../services/authService';
-import '../styles/Dashboard.css';
-import AddActividadModal from './AddActividadModal';
+import { Range, getTrackBackground } from 'react-range';
+import '../styles/AddActividadModal.css';
 
-
-interface UserProfile {
-  name: string;
-  email: string;
+interface AddActividadModalProps {
+  onClose: () => void;
+  onAdd: (actividad: any) => void;
+  initialData?: any;
+  onDelete?: () => void; 
 }
 
+const CLIMAS = [
+  { value: 'Clear', label: 'Despejado' },
+  { value: 'Clouds', label: 'Nublado' },
+  { value: 'Rain', label: 'Lluvia' },
+  { value: 'Snow', label: 'Nieve' },
+  { value: 'Thunderstorm', label: 'Tormenta eléctrica' },
+  { value: 'Drizzle', label: 'Llovizna' },
+  { value: 'Mist', label: 'Neblina' },
+  { value: 'Haze', label: 'Aire Brumoso' },
+  { value: 'Dust', label: 'Polvo en el aire' },
+  { value: 'Fog', label: 'Niebla' },
+  { value: 'Ash', label: 'Ceniza volcánica' },
+  { value: 'Squall', label: 'Ráfagas de viento' },
+];
 
-const Dashboard: React.FC = () => {
-  const [activeSection, setActiveSection] = useState('profile');
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [message, setMessage] = useState<string | null>(null);
-  const [profile, setProfile] = useState<UserProfile>({
-    name: '',
-    email: ''
-  });
-  const [editingProfile, setEditingProfile] = useState(false);
-  const [editedProfile, setEditedProfile] = useState<UserProfile>({
-    name: '',
-    email: ''
-  });
-  const [password, setPassword] = useState('');
-  const [actividades, setActividades] = useState<any[]>([]);
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [selectedActividad, setSelectedActividad] = useState<any | null>(null);
+const TEMP_MIN = -30;
+const TEMP_MAX = 60;
+const WIND_MIN = 0;
+const WIND_MAX = 30;
 
-  const handleLogout = () => {
-    authService.logout();
-    window.location.assign('/');
-  };
+const AddActividadModal: React.FC<AddActividadModalProps> = ({ onClose, onAdd, initialData, onDelete }) => {
+  const [actividadId, setActividadId] = useState<string | null>(null);
+  const [name, setName] = useState('');
+  const [climas, setClimas] = useState<number[]>([]);
+  const [tempRange, setTempRange] = useState<[number, number]>([TEMP_MIN, TEMP_MAX]);
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [windRange, setWindRange] = useState<[number, number]>([WIND_MIN, WIND_MAX]);
+  const [humidityMax, setHumidityMax] = useState(60);
+  const [climaError, setClimaError] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  // Cargar datos cuando initialData cambia para editar alguna
   useEffect(() => {
-    if (!localStorage.getItem('token')) {
-    }
-  }, [navigate]);
-
-  
-  // UseEffect para borrar mensajes dentro de 2 segs.
-  useEffect(() => {
-    if (error || message) {
-      const timer = setTimeout(() => {
-        setError(null);
-        setMessage(null);
-      }, 2000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [error, message]);
-  
-  // UseEffect para carga de datos.
-  useEffect(() => {
-    setError(null);
-    setMessage(null);
-    const cargarDatos = async () => {
-      try {
-        const userData = await userService.getProfile();
-        const data = await getUserInterests();
-
-        setProfile(userData);
-        setEditedProfile(userData);
-        setActividades(data);
-        setLoading(false);
-      } catch (err) {
-        setError('Error al cargar los datos');
-        setLoading(false);
-      }
-    };
-    cargarDatos();
-  }, []);
-
-
-  const handleProfileUpdate = async () => {
-  try {
-    const updateData = {
-      ...editedProfile,
-      password: password || undefined
-    };
-    await userService.updateProfile(updateData);
-    setProfile(editedProfile);
-    setEditingProfile(false);
-    setPassword('');
-    setError(null);
-    setMessage('Perfil actualizado correctamente');
-  } catch (err) {
-    setError('Error al actualizar el perfil');
+  if (initialData) {
+    setActividadId(initialData.id ?? null);
+    setName(initialData.name || '');
+    setClimas(Array.isArray(initialData.climas_permitidos) ? initialData.climas_permitidos : []);
+    setTempRange([
+      typeof initialData.temp_min === 'number' ? initialData.temp_min : TEMP_MIN,
+      typeof initialData.temp_max === 'number' ? initialData.temp_max : TEMP_MAX,
+    ]);
+    setShowAdvanced(
+      initialData.viento_min !== undefined ||
+      initialData.viento_max !== undefined ||
+      initialData.humedad_max !== undefined
+    );
+    setWindRange([
+      typeof initialData.viento_min === 'number' ? initialData.viento_min : WIND_MIN,
+      typeof initialData.viento_max === 'number' ? initialData.viento_max : WIND_MAX,
+    ]);
+    setHumidityMax(
+      typeof initialData.humedad_max === 'number' ? initialData.humedad_max : 60
+    );
+  } else {
+    setActividadId(null);
+    setName('');
+    setClimas([]);
+    setTempRange([TEMP_MIN, TEMP_MAX]);
+    setShowAdvanced(false);
+    setWindRange([WIND_MIN, WIND_MAX]);
+    setHumidityMax(60);
   }
-};
+  setClimaError(false);
+}, [initialData]);
 
 
-
-  const handleAddActividad = async (actividadData: any) => {
-  try {
-    if (actividadData.id) {
-      const { id, ...updateFields } = actividadData;
-      await updateInterest(id, updateFields);
-    } else {
-      await createInterest(actividadData);
-    }
-    setShowAddModal(false);
-    setSelectedActividad(null);
-    const interesesActualizados = await getUserInterests();
-    setActividades(interesesActualizados);
-    setMessage(selectedActividad ? 'Actividad modificada' : 'Actividad personalizada creada');
-  } catch (err) {
-    setError('Error al guardar la actividad');
-  }
-};
-
-
-  const handleDeleteActividad = async (id: number) => {
-    try {
-      await deleteInterest(id);
-      setShowAddModal(false);
-      setSelectedActividad(null);
-      const interesesActualizados = await getUserInterests();
-      setActividades(interesesActualizados);
-      setMessage('Actividad eliminada');
-    } catch (err) {
-      setError('Error al eliminar la actividad');
-    }
+  const handleClimaChange = (climaIdx: number) => {
+    setClimas((prev) =>
+      prev.includes(climaIdx) ? prev.filter((c) => c !== climaIdx) : [...prev, climaIdx]
+    );
+    setClimaError(false);
   };
 
-  if (!localStorage.getItem('token')) {
-    navigate('/');
-    return null;
-  }
-
-  if (loading) {
-    return <div>Cargando...</div>;
-  }
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (climas.length === 0) {
+      setClimaError(true);
+      return;
+    }
+    if (
+      name.trim() &&
+      tempRange[0] !== null &&
+      tempRange[1] !== null
+    ) {
+      const actividad = {
+        id: actividadId ?? undefined,
+        name: name.trim(),
+        climas_permitidos: climas,
+        temp_min: tempRange[0],
+        temp_max: tempRange[1],
+        viento_min: showAdvanced ? windRange[0] : 0,
+        viento_max: showAdvanced ? windRange[1] : 30,
+        humedad_max: showAdvanced ? humidityMax : 100,
+        requiere_sin_lluvia: false
+      };
+      onAdd(actividad);
+      onClose();
+    }
+  };
 
   return (
-    <div className="dashboard-container">
-      <div className="dashboard-sidebar">
-        <img
-          src="/images/logo.png"
-          alt="Logo"
-          className="sidebar-logo"
-        />
-        <button 
-          className={`sidebar-button ${activeSection === 'profile' ? 'active' : ''}`}
-          onClick={() => setActiveSection('profile')}
-        >
-          Perfil
-        </button>
-        <button 
-          className={`sidebar-button ${activeSection === 'interests' ? 'active' : ''}`}
-          onClick={() => setActiveSection('interests')}
-        >
-          Mis Intereses
-        </button>
-        <button 
-          className={`sidebar-button ${activeSection === 'myInterests' ? 'active' : ''}`}
-          onClick={() => navigate('/')}
-        >
-          Volver al Inicio
-        </button>
-        <button 
-          className="sidebar-button logout-button"
-          onClick={handleLogout}
-        >
-          Cerrar sesión
-        </button>
-      </div>
-      
-      <div className="dashboard-content">
-        {error && <div className="error-message">{error}</div>}
-        {message && <div className="success-message">{message}</div>}
-        {activeSection === 'profile' && (
-          <div className="profile-section">
-            <h2>Mi Perfil</h2>
-            {!editingProfile ? (
-              <>
-                <div className="profile-info">
-                  <p><strong>Nombre:</strong> {profile.name}</p>
-                  <p><strong>Email:</strong> {profile.email}</p>
-                </div>
-                <button 
-                  className="edit-button"
-                  onClick={() => setEditingProfile(true)}
-                >
-                  Editar Perfil
-                </button>
-              </>
-            ) : (
-              <form className="profile-form" onSubmit={(e) => {
-                e.preventDefault();
-                handleProfileUpdate();
-              }}>
-                <div className="form-group">
-                  <label>Nombre</label>
-                  <input 
-                    type="text" 
-                    value={editedProfile.name}
-                    onChange={(e) => setEditedProfile({
-                      ...editedProfile,
-                      name: e.target.value
-                    })}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Email</label>
-                  <input 
-                    type="email" 
-                    value={editedProfile.email}
-                    onChange={(e) => setEditedProfile({
-                      ...editedProfile,
-                      email: e.target.value
-                    })}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Nueva Contraseña (opcional)</label>
-                  <input 
-                    type="password" 
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Dejar en blanco para mantener la actual"
-                  />
-                </div>
-                <div className="form-actions">
-                  <button type="submit">Guardar Cambios</button>
-                  <button 
-                    type="button" 
-                    onClick={() => {
-                      setEditingProfile(false);
-                      setEditedProfile(profile);
-                      setPassword('');
-                    }}
-                  >
-                    Cancelar
-                  </button>
-                </div>
-              </form>
-            )}
+    <div className="modal-backdrop">
+      <div className="modal">
+        <h3>
+          {initialData ? 'Modificar Actividad' : 'Agregar Nueva Actividad'}
+        </h3>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Nombre de actividad</label>
+            <input
+              type="text"
+              value={name}
+              onChange={e => setName(e.target.value)}
+              required
+            />
           </div>
-        )}
-        
-        {activeSection === 'interests' && (
-          <div className="interests-section">
-            <h2>Mis Intereses</h2>
-            <div className="interests-grid">
-              {actividades.map((actividad) => (
-                <button
-                  key={actividad.id}
-                  className="interest-item"
-                  onClick={() => {
-                    setSelectedActividad(actividad);
-                    setShowAddModal(true);
-                  }}
-                  title="Modificar"
-                  style={{ cursor: 'pointer', textAlign: 'left' }}
-                >
-                  {actividad.name}
-                </button>
+          <div className="form-group">
+            <label>Climas permitidos</label>
+            <div className="climas-list">
+              {CLIMAS.map((clima, idx) => (
+                <label key={clima.value} className="clima-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={climas.includes(idx)}
+                    onChange={() => handleClimaChange(idx)}
+                  />
+                  {clima.label}
+                </label>
               ))}
             </div>
+            {climaError && (
+              <div style={{ color: 'red', marginTop: 6, fontSize: 13 }}>
+                Debes seleccionar al menos un clima.
+              </div>
+            )}
+          </div>
+          <div className="form-group">
+            <label>Rango de temperatura aceptable (°C)</label>
+            <div className="slider-container">
+              <Range
+                step={1}
+                min={TEMP_MIN}
+                max={TEMP_MAX}
+                values={tempRange}
+                onChange={values => setTempRange([Math.min(values[0], values[1]), Math.max(values[0], values[1])])}
+                renderTrack={({ props, children }) => (
+                  <div
+                    {...props}
+                    className="slider-track"
+                    style={{
+                      ...props.style,
+                      background: getTrackBackground({
+                        values: tempRange,
+                        colors: ['#ccc', '#548BF4', '#ccc'],
+                        min: TEMP_MIN,
+                        max: TEMP_MAX
+                      })
+                    }}
+                  >
+                    {children}
+                  </div>
+                )}
+                renderThumb={({ index, props, value }) => (
+                  <div
+                    {...props}
+                    className="slider-thumb"
+                  >
+                    <div className="slider-thumb-label">
+                      {value === TEMP_MIN
+                        ? `${TEMP_MIN}°C`
+                        : value === TEMP_MAX
+                        ? `${TEMP_MAX}°C`
+                        : `${value}°C`}
+                    </div>
+                  </div>
+                )}
+                allowOverlap={false}
+                draggableTrack={false}
+              />
+              <div className="slider-labels">
+                <span>{TEMP_MIN}°C</span>
+                <span>{TEMP_MAX}°C</span>
+              </div>
+            </div>
+          </div>
+          <div className="form-group">
             <button
-              className="add-interest-button"
-              onClick={() => {
-                setShowAddModal(true);
-                setSelectedActividad(null);
-              }}
-              style={{ marginTop: '16px' }}
+              type="button"
+              onClick={() => setShowAdvanced((prev) => !prev)}
+              className="advanced-btn"
             >
-              + Añadir
+              {showAdvanced ? 'Contraer parámetros avanzados' : 'Parámetros avanzados'}
             </button>
           </div>
-        )}
-
-        {showAddModal && (
-          <AddActividadModal
-            onAdd={handleAddActividad}
-            onClose={() => {
-              setShowAddModal(false);
-              setSelectedActividad(null);
-            }}
-            initialData={selectedActividad}
-            onDelete={
-              selectedActividad
-                ? () => handleDeleteActividad(selectedActividad.id)
-                : undefined
-            }
-          />
-        )}
+          {showAdvanced && (
+            <div className="advanced-params">
+              <div className="form-group">
+                <label>Rango de velocidad del viento (m/s)</label>
+                <div className="slider-container">
+                  <Range
+                    step={1}
+                    min={WIND_MIN}
+                    max={WIND_MAX}
+                    values={windRange}
+                    onChange={values => setWindRange([Math.min(values[0], values[1]), Math.max(values[0], values[1])])}
+                    renderTrack={({ props, children }) => (
+                      <div
+                        {...props}
+                        className="slider-track"
+                        style={{
+                          ...props.style,
+                          background: getTrackBackground({
+                            values: windRange,
+                            colors: ['#ccc', '#548BF4', '#ccc'],
+                            min: WIND_MIN,
+                            max: WIND_MAX
+                          })
+                        }}
+                      >
+                        {children}
+                      </div>
+                    )}
+                    renderThumb={({ index, props, value }) => (
+                      <div
+                        {...props}
+                        className="slider-thumb"
+                      >
+                        <div className="slider-thumb-label">
+                          {value === WIND_MIN
+                            ? `${WIND_MIN} m/s`
+                            : value === WIND_MAX
+                            ? `${WIND_MAX} m/s`
+                            : `${value} m/s`}
+                        </div>
+                      </div>
+                    )}
+                    allowOverlap={false}
+                    draggableTrack={false}
+                  />
+                  <div className="slider-labels">
+                    <span>{WIND_MIN} m/s</span>
+                    <span>{WIND_MAX} m/s</span>
+                  </div>
+                </div>
+              </div>
+              <div className="form-group">
+                <label>Humedad máxima permitida (%)</label>
+                <div className="slider-container">
+                  <Range
+                    step={1}
+                    min={0}
+                    max={100}
+                    values={[humidityMax]}
+                    onChange={values => setHumidityMax(values[0])}
+                    renderTrack={({ props, children }) => (
+                      <div
+                        {...props}
+                        className="slider-track"
+                        style={{
+                          ...props.style,
+                          background: getTrackBackground({
+                            values: [humidityMax],
+                            colors: ['#548BF4', '#ccc'],
+                            min: 0,
+                            max: 100
+                          })
+                        }}
+                      >
+                        {children}
+                      </div>
+                    )}
+                    renderThumb={({ props, value }) => (
+                      <div
+                        {...props}
+                        className="slider-thumb"
+                      >
+                        <div className="slider-thumb-label">
+                          {`${value} %`}
+                        </div>
+                      </div>
+                    )}
+                  />
+                  <div className="slider-labels">
+                    <span>0%</span>
+                    <span>100%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          <div className="form-actions">
+            <button type="submit">{initialData ? 'Guardar Cambios' : 'Agregar'}</button>
+            {initialData && onDelete && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setShowDeleteConfirm(true)}
+                  style={{ marginLeft: 8, color: 'white', background: 'red' }}
+                >
+                  Quitar
+                </button>
+                {showDeleteConfirm && (
+                  <div className="delete-confirm-modal">
+                    <div className="delete-confirm-content">
+                      <p>¿Confirma quitar la actividad?</p>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowDeleteConfirm(false);
+                          onDelete();
+                        }}
+                        style={{ color: 'white', background: 'red', marginRight: 8 }}
+                      >
+                        Sí
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setShowDeleteConfirm(false)}
+                      >
+                        Cancelar
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+            <button type="button" onClick={onClose} style={{ marginLeft: 8 }}>
+              Cancelar
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
 };
 
-export default Dashboard;
+export default AddActividadModal;
