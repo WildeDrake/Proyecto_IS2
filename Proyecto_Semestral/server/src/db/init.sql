@@ -55,6 +55,14 @@ CREATE TABLE IF NOT EXISTS blacklisted_tokens (
     expira_en TIMESTAMP WITH TIME ZONE NOT NULL
 );
 
+-- Create user_favorites table if not exists
+CREATE TABLE IF NOT EXISTS user_favorites (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    city VARCHAR(100) NOT NULL,
+    UNIQUE(user_id, city)
+);
+
 -- Verifica si la tabla está vacía
 DO $$
 BEGIN

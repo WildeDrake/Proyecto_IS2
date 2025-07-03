@@ -1,26 +1,75 @@
 .favorites-list {
     margin-top: 1.5rem;
-  }
-  
-  .favorites-list ul {
+    background: linear-gradient(135deg, #e6f0ff 0%, #f0f7ff 100%);
+    border-left: 6px solid #3b82f6;
+    border-radius: 16px;
+    padding: 1.5rem 2rem;
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.08);
+    transition: transform 0.2s;
+}
+
+.favorites-list:hover {
+    transform: translateY(-4px) scale(1.02);
+}
+
+.favorites-list-title {
+    color: #1e40af;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+.favorites-list ul {
     padding: 0;
     list-style-type: none;
-  }
-  
-  .favorites-list li {
+}
+
+.favorites-list li {
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    padding: 0.5rem 0;
-  }
-  
-  .favorites-list li .favorite-city {
+    background: rgba(255,255,255,0.7);
+    border-radius: 8px;
+    margin-bottom: 0.7rem;
+    padding: 0.7rem 1rem;
+    transition: background 0.2s;
+}
+
+.favorites-list li:hover {
+    background: #dbeafe;
+}
+
+.favorites-list li .favorite-city {
     cursor: pointer;
-    color: #3490dc;
+    color: #2563eb;
     text-decoration: underline;
-  }
-  
-  .favorites-list li .remove-button {
+    font-weight: 500;
+    font-size: 1.1rem;
+}
+
+.favorites-list li .remove-button {
     color: #e53e3e;
-    font-size: 0.9rem;
-  }
-  
+    font-size: 1.2rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0 8px;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+
+.favorites-list li .remove-button:hover {
+    background: #fee2e2;
+}
+
+.favorites-list-empty {
+    color: #64748b;
+    text-align: center;
+    font-style: italic;
+    margin-top: 1rem;
+}

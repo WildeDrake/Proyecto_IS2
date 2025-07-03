@@ -52,10 +52,80 @@
 }
 
 .profile-form {
-  max-width: 500px;
+  max-width: 420px;
+  margin: 0 auto;
+  background: rgba(255,255,255,0.95);
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(59,130,246,0.10);
+  padding: 2.5rem 2rem 2rem 2rem;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 1.5rem;
+  border: 1px solid #e0e7ef;
+}
+
+.profile-form .form-group label {
+  color: #2c3e50;
+  font-weight: 500;
+  font-size: 1rem;
+  margin-bottom: 0.3rem;
+}
+
+.profile-form .form-group input[type="text"],
+.profile-form .form-group input[type="email"],
+.profile-form .form-group input[type="password"] {
+  padding: 12px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 1rem;
+  background-color: #f8fafc;
+  color: #222;
+  transition: border-color 0.3s;
+}
+
+.profile-form .form-group input:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52,152,219,0.13);
+}
+
+.profile-form .form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.profile-form button[type="submit"] {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.profile-form button[type="submit"]:hover {
+  background-color: #2980b9;
+  transform: translateY(-1px);
+}
+
+.profile-form button[type="button"] {
+  background-color: #95a5a6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.profile-form button[type="button"]:hover {
+  background-color: #7f8c8d;
+  transform: translateY(-1px);
 }
 
 .form-group {
@@ -105,4 +175,112 @@ button:hover {
   align-items: center;
   padding: 10px;
   border-bottom: 1px solid #ddd;
+}
+
+.profile-preview {
+  max-width: 420px;
+  margin: 0 auto 2rem auto;
+  background: rgba(255,255,255,0.97);
+  border-radius: 14px;
+  box-shadow: 0 6px 32px rgba(59,130,246,0.13);
+  padding: 2.5rem 2rem 2rem 2rem;
+  border: 1.5px solid #e0e7ef;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  transition: box-shadow 0.2s;
+}
+
+.profile-preview .profile-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+}
+
+.profile-preview .profile-label {
+  color: #2c3e50;
+  font-weight: 500;
+  min-width: 110px;
+}
+
+.profile-preview .profile-value {
+  color: #3498db;
+  font-size: 1.05rem;
+  font-weight: 400;
+  word-break: break-all;
+}
+
+.profile-preview .edit-btn {
+  align-self: flex-end;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  margin-top: 1.5rem;
+}
+
+.profile-preview .edit-btn:hover {
+  background-color: #2980b9;
+  transform: translateY(-1px);
+}
+
+.profile-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 32px;
+}
+
+.profile-info {
+  background: linear-gradient(120deg, #e0e7ff 0%, #f0f7ff 100%);
+  border-radius: 16px;
+  box-shadow: 0 6px 32px rgba(59,130,246,0.13);
+  padding: 2.5rem 2.5rem 2rem 2.5rem;
+  border: 1.5px solid #e0e7ef;
+  min-width: 340px;
+  max-width: 480px;
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  align-items: flex-start;
+  transition: box-shadow 0.2s;
+}
+
+.profile-info p {
+  font-size: 1.15rem;
+  color: #1e293b;
+  margin: 0.5rem 0;
+  letter-spacing: 0.01em;
+}
+
+.profile-info strong {
+  color: #2563eb;
+  font-weight: 600;
+  margin-right: 0.5rem;
+}
+
+.edit-button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 28px;
+  font-size: 1.08rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.2s, transform 0.2s;
+  box-shadow: 0 2px 8px rgba(52,152,219,0.08);
+}
+
+.edit-button:hover {
+  background-color: #2563eb;
+  transform: translateY(-2px) scale(1.03);
 }

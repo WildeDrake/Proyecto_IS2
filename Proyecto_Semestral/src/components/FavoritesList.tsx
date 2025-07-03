@@ -9,7 +9,7 @@ interface FavoritesListProps {
 
 const FavoritesList: React.FC<FavoritesListProps> = ({ favorites, removeFavorite, fetchWeather }) => (
   <div className="favorites-list">
-    {favorites.length > 0 && (
+    {favorites.length > 0 ? (
       <div className="mt-6">
         <h3 className="font-semibold mb-2">⭐ Ciudades favoritas</h3>
         <ul className="space-y-1">
@@ -30,6 +30,10 @@ const FavoritesList: React.FC<FavoritesListProps> = ({ favorites, removeFavorite
             </li>
           ))}
         </ul>
+      </div>
+    ) : (
+      <div className="favorites-list-empty">
+        No tiene ciudades favoritas agregadas, cabe recalcar que esta funcionalidad solo estará disponible para usuarios registrados.
       </div>
     )}
   </div>

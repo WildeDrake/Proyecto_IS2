@@ -1,28 +1,31 @@
 import { useState, useEffect } from "react";
+import { getFavorites, addFavorite as apiAdd, removeFavorite as apiRemove } from "../services/favorites";
 
 const useFavorites = () => {
   const [favorites, setFavorites] = useState<string[]>([]);
 
-  // Recuperar favoritos del almacenamiento local
   useEffect(() => {
-    const saved = localStorage.getItem("favorites");
-    if (saved) setFavorites(JSON.parse(saved));
+    const fetchFavorites = async () => {
+      try {
+        const favs = await getFavorites();
+        setFavorites(favs);
+      } catch {
+        setFavorites([]);
+      }
+    };
+    fetchFavorites();
   }, []);
 
-  // Agregar ciudad a favoritos
-  const addFavorite = (city: string) => {
+  const addFavorite = async (city: string) => {
     if (!favorites.includes(city)) {
-      const updatedFavorites = [...favorites, city];
-      setFavorites(updatedFavorites);
-      localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+      await apiAdd(city);
+      setFavorites([...favorites, city]);
     }
   };
 
-  // Eliminar ciudad de favoritos
-  const removeFavorite = (city: string) => {
-    const updatedFavorites = favorites.filter((c) => c !== city);
-    setFavorites(updatedFavorites);
-    localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+  const removeFavorite = async (city: string) => {
+    await apiRemove(city);
+    setFavorites(favorites.filter((c) => c !== city));
   };
 
   return { favorites, addFavorite, removeFavorite };

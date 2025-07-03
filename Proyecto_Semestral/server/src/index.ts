@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import authRoutes from './routes/auth';
 import userRoutes from './routes/user';
 import interestsRoutes from './routes/interests';
+import favoritesRoutes from './routes/favorites';
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/interests', interestsRoutes);
+app.use('/api/favorites', favoritesRoutes);
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);

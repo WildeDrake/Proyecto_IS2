@@ -107,6 +107,11 @@ const Dashboard: React.FC = () => {
   return (
     <div className="dashboard-container">
       <div className="dashboard-sidebar">
+        <img
+          src="/images/logo.png"
+          alt="Logo"
+          className="sidebar-logo"
+        />
         <button 
           className={`sidebar-button ${activeSection === 'profile' ? 'active' : ''}`}
           onClick={() => setActiveSection('profile')}
