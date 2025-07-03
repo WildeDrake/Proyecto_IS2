@@ -1,19 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Range, getTrackBackground } from 'react-range';
 import '../styles/AddActividadModal.css';
-import { createInterest } from '../services/interests';
 
 interface AddActividadModalProps {
   onClose: () => void;
-  onAdd: (actividad: {
-    name: string;
-    climas: string[];
-    tempMin: number;
-    tempMax: number;
-    windMin?: number;
-    windMax?: number;
-    humidityMax?: number;
-  }) => void;
+  onAdd: (actividad: any) => void;
+  initialData?: any;
+  onDelete?: () => void; 
 }
 
 const CLIMAS = [
@@ -36,20 +29,57 @@ const TEMP_MAX = 60;
 const WIND_MIN = 0;
 const WIND_MAX = 30;
 
-const AddActividadModal: React.FC<AddActividadModalProps> = ({ onClose, onAdd }) => {
+const AddActividadModal: React.FC<AddActividadModalProps> = ({ onClose, onAdd, initialData, onDelete }) => {
+  const [actividadId, setActividadId] = useState<string | null>(null);
   const [name, setName] = useState('');
-  const [climas, setClimas] = useState<string[]>([]);
+  const [climas, setClimas] = useState<number[]>([]);
   const [tempRange, setTempRange] = useState<[number, number]>([TEMP_MIN, TEMP_MAX]);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [windRange, setWindRange] = useState<[number, number]>([WIND_MIN, WIND_MAX]);
   const [humidityMax, setHumidityMax] = useState(60);
-  const [climaError, setClimaError] = useState(false); // Nuevo estado para error
+  const [climaError, setClimaError] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  const handleClimaChange = (clima: string) => {
-    setClimas((prev) =>
-      prev.includes(clima) ? prev.filter((c) => c !== clima) : [...prev, clima]
+  // Cargar datos cuando initialData cambia para editar alguna
+  useEffect(() => {
+  if (initialData) {
+    setActividadId(initialData.id ?? null);
+    setName(initialData.name || '');
+    setClimas(Array.isArray(initialData.climas_permitidos) ? initialData.climas_permitidos : []);
+    setTempRange([
+      typeof initialData.temp_min === 'number' ? initialData.temp_min : TEMP_MIN,
+      typeof initialData.temp_max === 'number' ? initialData.temp_max : TEMP_MAX,
+    ]);
+    setShowAdvanced(
+      initialData.viento_min !== undefined ||
+      initialData.viento_max !== undefined ||
+      initialData.humedad_max !== undefined
     );
-    setClimaError(false); // Limpiar error al seleccionar
+    setWindRange([
+      typeof initialData.viento_min === 'number' ? initialData.viento_min : WIND_MIN,
+      typeof initialData.viento_max === 'number' ? initialData.viento_max : WIND_MAX,
+    ]);
+    setHumidityMax(
+      typeof initialData.humedad_max === 'number' ? initialData.humedad_max : 60
+    );
+  } else {
+    setActividadId(null);
+    setName('');
+    setClimas([]);
+    setTempRange([TEMP_MIN, TEMP_MAX]);
+    setShowAdvanced(false);
+    setWindRange([WIND_MIN, WIND_MAX]);
+    setHumidityMax(60);
+  }
+  setClimaError(false);
+}, [initialData]);
+
+
+  const handleClimaChange = (climaIdx: number) => {
+    setClimas((prev) =>
+      prev.includes(climaIdx) ? prev.filter((c) => c !== climaIdx) : [...prev, climaIdx]
+    );
+    setClimaError(false);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -64,16 +94,17 @@ const AddActividadModal: React.FC<AddActividadModalProps> = ({ onClose, onAdd })
       tempRange[1] !== null
     ) {
       const actividad = {
+        id: actividadId ?? undefined,
         name: name.trim(),
-        climas,
-        tempMin: tempRange[0],
-        tempMax: tempRange[1],
-        windMin: showAdvanced ? windRange[0] : undefined,
-        windMax: showAdvanced ? windRange[1] : undefined,
-        humidityMax: showAdvanced ? humidityMax : undefined,
-        requiereSinLluvia: false // campo extra requerido por la base de datos
+        climas_permitidos: climas,
+        temp_min: tempRange[0],
+        temp_max: tempRange[1],
+        viento_min: showAdvanced ? windRange[0] : 0,
+        viento_max: showAdvanced ? windRange[1] : 30,
+        humedad_max: showAdvanced ? humidityMax : 100,
+        requiere_sin_lluvia: false
       };
-      onAdd(actividad); // Aquí puedes llamar a tu función que guarda en la base de datos
+      onAdd(actividad);
       onClose();
     }
   };
@@ -81,7 +112,9 @@ const AddActividadModal: React.FC<AddActividadModalProps> = ({ onClose, onAdd })
   return (
     <div className="modal-backdrop">
       <div className="modal">
-        <h3>Agregar Nueva Actividad</h3>
+        <h3>
+          {initialData ? 'Modificar Actividad' : 'Agregar Nueva Actividad'}
+        </h3>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Nombre de actividad</label>
@@ -95,12 +128,12 @@ const AddActividadModal: React.FC<AddActividadModalProps> = ({ onClose, onAdd })
           <div className="form-group">
             <label>Climas permitidos</label>
             <div className="climas-list">
-              {CLIMAS.map(clima => (
+              {CLIMAS.map((clima, idx) => (
                 <label key={clima.value} className="clima-checkbox">
                   <input
                     type="checkbox"
-                    checked={climas.includes(clima.value)}
-                    onChange={() => handleClimaChange(clima.value)}
+                    checked={climas.includes(idx)}
+                    onChange={() => handleClimaChange(idx)}
                   />
                   {clima.label}
                 </label>
@@ -267,7 +300,41 @@ const AddActividadModal: React.FC<AddActividadModalProps> = ({ onClose, onAdd })
             </div>
           )}
           <div className="form-actions">
-            <button type="submit">Agregar</button>
+            <button type="submit">{initialData ? 'Guardar Cambios' : 'Agregar'}</button>
+            {initialData && onDelete && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setShowDeleteConfirm(true)}
+                  style={{ marginLeft: 8, color: 'white', background: 'red' }}
+                >
+                  Quitar
+                </button>
+                {showDeleteConfirm && (
+                  <div className="delete-confirm-modal">
+                    <div className="delete-confirm-content">
+                      <p>¿Confirma quitar la actividad?</p>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowDeleteConfirm(false);
+                          onDelete();
+                        }}
+                        style={{ color: 'white', background: 'red', marginRight: 8 }}
+                      >
+                        Sí
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setShowDeleteConfirm(false)}
+                      >
+                        Cancelar
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
             <button type="button" onClick={onClose} style={{ marginLeft: 8 }}>
               Cancelar
             </button>
