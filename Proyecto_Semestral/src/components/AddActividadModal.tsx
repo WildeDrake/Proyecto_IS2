@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Range, getTrackBackground } from 'react-range';
 import '../styles/AddActividadModal.css';
+import { createInterest } from '../services/interests';
 
 interface AddActividadModalProps {
   onClose: () => void;

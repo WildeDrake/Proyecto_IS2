@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { userService } from '../services/userService';
-import { getUserInterests, updateInterestState } from '../services/interests';
+import { createInterest, getUserInterests, updateInterestState } from '../services/interests';
 import { authService } from '../services/authService';
 import '../styles/Dashboard.css';
 import AddActividadModal from './AddActividadModal';
@@ -95,6 +95,19 @@ const Dashboard: React.FC = () => {
 
 
 
+  const handleAddActividad = async (actividadData: any) => {
+    try {
+      await createInterest(actividadData);
+      setShowAddModal(false);
+      // Refresca la lista de intereses del usuario
+      const interesesActualizados = await getUserInterests();
+      setActividades(interesesActualizados);
+      setMessage('Actividad personalizada creada');
+    } catch (err) {
+      setError('Error al crear la actividad');
+    }
+  };
+
   if (!localStorage.getItem('token')) {
     navigate('/');
     return null;
@@ -126,7 +139,7 @@ const Dashboard: React.FC = () => {
         </button>
         <button 
           className={`sidebar-button ${activeSection === 'myInterests' ? 'active' : ''}`}
-          onClick={() => setActiveSection('myInterests')}
+          onClick={() => navigate('/')}
         >
           Volver al Inicio
         </button>
@@ -252,10 +265,11 @@ const Dashboard: React.FC = () => {
 
         {showAddModal && (
           <AddActividadModal
+            onAdd={handleAddActividad}
             onClose={() => setShowAddModal(false)}
-            onAdd={(actividad) => setNuevasActividades(prev => [...prev, actividad])}
           />
-        )}
+        )
+        }
       </div>
     </div>
   );

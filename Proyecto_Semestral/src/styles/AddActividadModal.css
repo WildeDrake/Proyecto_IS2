@@ -14,6 +14,8 @@
   padding: 32px 32px 24px 32px;
   min-width: 400px;
   max-width: 600px;
+  max-height: 90vh;      /* Limita la altura máxima */
+  overflow-y: auto;      /* Hace el modal scrolleable */
   box-shadow: 0 2px 24px rgba(0,0,0,0.18);
 }
 
