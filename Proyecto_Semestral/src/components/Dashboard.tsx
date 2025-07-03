@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { userService } from '../services/userService';
-import { createInterest, getUserInterests, updateInterestState } from '../services/interests';
+import { createInterest, getUserInterests, updateInterest, deleteInterest } from '../services/interests';
 import { authService } from '../services/authService';
 import '../styles/Dashboard.css';
 import AddActividadModal from './AddActividadModal';
@@ -31,7 +31,8 @@ const Dashboard: React.FC = () => {
   const [password, setPassword] = useState('');
   const [actividades, setActividades] = useState<any[]>([]);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [nuevasActividades, setNuevasActividades] = useState<any[]>([]);
+  const [selectedActividad, setSelectedActividad] = useState<any | null>(null);
+
   const handleLogout = () => {
     authService.logout();
     window.location.assign('/');
@@ -96,15 +97,34 @@ const Dashboard: React.FC = () => {
 
 
   const handleAddActividad = async (actividadData: any) => {
-    try {
+  try {
+    if (actividadData.id) {
+      const { id, ...updateFields } = actividadData;
+      await updateInterest(id, updateFields);
+    } else {
       await createInterest(actividadData);
+    }
+    setShowAddModal(false);
+    setSelectedActividad(null);
+    const interesesActualizados = await getUserInterests();
+    setActividades(interesesActualizados);
+    setMessage(selectedActividad ? 'Actividad modificada' : 'Actividad personalizada creada');
+  } catch (err) {
+    setError('Error al guardar la actividad');
+  }
+};
+
+
+  const handleDeleteActividad = async (id: number) => {
+    try {
+      await deleteInterest(id);
       setShowAddModal(false);
-      // Refresca la lista de intereses del usuario
+      setSelectedActividad(null);
       const interesesActualizados = await getUserInterests();
       setActividades(interesesActualizados);
-      setMessage('Actividad personalizada creada');
+      setMessage('Actividad eliminada');
     } catch (err) {
-      setError('Error al crear la actividad');
+      setError('Error al eliminar la actividad');
     }
   };
 
@@ -229,33 +249,26 @@ const Dashboard: React.FC = () => {
             <h2>Mis Intereses</h2>
             <div className="interests-grid">
               {actividades.map((actividad) => (
-                <label key={actividad.id} className="interest-item">
-                  <input
-                    type="checkbox"
-                    checked={actividad.estado}
-                    onChange={async (e) => {
-                      const nuevoEstado = e.target.checked;
-                      try {
-                        await updateInterestState(actividad.id, nuevoEstado);
-                        // Actualizamos localmente el estado de esa actividad
-                        setActividades((prev) =>
-                          prev.map((a) =>
-                            a.id === actividad.id ? { ...a, estado: nuevoEstado } : a
-                          )
-                        );
-                        setMessage('Estado actualizado correctamente');
-                      } catch (err) {
-                        setError('Error al cambiar el estado');
-                      }
-                    }}
-                  />
+                <button
+                  key={actividad.id}
+                  className="interest-item"
+                  onClick={() => {
+                    setSelectedActividad(actividad);
+                    setShowAddModal(true);
+                  }}
+                  title="Modificar"
+                  style={{ cursor: 'pointer', textAlign: 'left' }}
+                >
                   {actividad.name}
-                </label>
+                </button>
               ))}
             </div>
             <button
               className="add-interest-button"
-              onClick={() => setShowAddModal(true)}
+              onClick={() => {
+                setShowAddModal(true);
+                setSelectedActividad(null);
+              }}
               style={{ marginTop: '16px' }}
             >
               + Añadir
@@ -266,10 +279,18 @@ const Dashboard: React.FC = () => {
         {showAddModal && (
           <AddActividadModal
             onAdd={handleAddActividad}
-            onClose={() => setShowAddModal(false)}
+            onClose={() => {
+              setShowAddModal(false);
+              setSelectedActividad(null);
+            }}
+            initialData={selectedActividad}
+            onDelete={
+              selectedActividad
+                ? () => handleDeleteActividad(selectedActividad.id)
+                : undefined
+            }
           />
-        )
-        }
+        )}
       </div>
     </div>
   );
