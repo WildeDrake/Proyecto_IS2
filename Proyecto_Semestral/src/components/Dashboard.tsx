@@ -78,6 +78,10 @@ const Dashboard: React.FC = () => {
 
 
   const handleProfileUpdate = async () => {
+    if (password && (password.length < 4 || password.length > 12)) {
+      setError('La contraseña debe tener entre 4 y 12 caracteres');
+      return;
+    }
   try {
     const updateData = {
       ...editedProfile,
@@ -224,6 +228,8 @@ const Dashboard: React.FC = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Dejar en blanco para mantener la actual"
+                    minLength={4}
+                    maxLength={12}
                   />
                 </div>
                 <div className="form-actions">
