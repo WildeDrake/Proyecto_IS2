@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, act } from 'react';
 import { Range, getTrackBackground } from 'react-range';
 import '../styles/AddActividadModal.css';
 
@@ -28,23 +28,35 @@ const TEMP_MIN = -30;
 const TEMP_MAX = 60;
 const WIND_MIN = 0;
 const WIND_MAX = 30;
+const HUMIDITY_MIN = 0;
+const HUMIDITY_MAX = 100;
 
 const AddActividadModal: React.FC<AddActividadModalProps> = ({ onClose, onAdd, initialData, onDelete }) => {
   const [actividadId, setActividadId] = useState<string | null>(null);
   const [name, setName] = useState('');
+  const [descripcion, setDescription] = useState('');
   const [climas, setClimas] = useState<number[]>([]);
   const [tempRange, setTempRange] = useState<[number, number]>([TEMP_MIN, TEMP_MAX]);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [windRange, setWindRange] = useState<[number, number]>([WIND_MIN, WIND_MAX]);
-  const [humidityMax, setHumidityMax] = useState(60);
+  const [humedadRange, setHumedadRange] = useState<[number, number]>([HUMIDITY_MIN, HUMIDITY_MAX]);
   const [climaError, setClimaError] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [requiereLluvia, setRequiereLluvia] = useState(false);
+  const [estado, setEstado] = useState(true);
+  const [visMinKm, setVisMinKm] = useState(0);
+
+
 
   // Cargar datos cuando initialData cambia para editar alguna
   useEffect(() => {
   if (initialData) {
     setActividadId(initialData.id ?? null);
     setName(initialData.name || '');
+    setDescription(initialData.descripcion || '');
+    setRequiereLluvia(initialData.requiere_sin_lluvia ?? false);
+    setEstado(initialData?.estado ?? true);
+    setVisMinKm(typeof initialData.vis_min_km === 'number' ? initialData.vis_min_km : 10);
     setClimas(Array.isArray(initialData.climas_permitidos) ? initialData.climas_permitidos : []);
     setTempRange([
       typeof initialData.temp_min === 'number' ? initialData.temp_min : TEMP_MIN,
@@ -59,9 +71,10 @@ const AddActividadModal: React.FC<AddActividadModalProps> = ({ onClose, onAdd, i
       typeof initialData.viento_min === 'number' ? initialData.viento_min : WIND_MIN,
       typeof initialData.viento_max === 'number' ? initialData.viento_max : WIND_MAX,
     ]);
-    setHumidityMax(
-      typeof initialData.humedad_max === 'number' ? initialData.humedad_max : 60
-    );
+    setHumedadRange([
+      typeof initialData.humedad_min === 'number' ? initialData.humedad_min : 0,
+      typeof initialData.humedad_max === 'number' ? initialData.humedad_max : 100,
+    ]);
   } else {
     setActividadId(null);
     setName('');
@@ -69,7 +82,11 @@ const AddActividadModal: React.FC<AddActividadModalProps> = ({ onClose, onAdd, i
     setTempRange([TEMP_MIN, TEMP_MAX]);
     setShowAdvanced(false);
     setWindRange([WIND_MIN, WIND_MAX]);
-    setHumidityMax(60);
+    setHumedadRange([HUMIDITY_MIN, HUMIDITY_MAX]);
+    setEstado(true);
+    setDescription('');
+    setRequiereLluvia(false);
+    setVisMinKm(10);
   }
   setClimaError(false);
 }, [initialData]);
@@ -101,8 +118,12 @@ const AddActividadModal: React.FC<AddActividadModalProps> = ({ onClose, onAdd, i
         temp_max: tempRange[1],
         viento_min: showAdvanced ? windRange[0] : 0,
         viento_max: showAdvanced ? windRange[1] : 30,
-        humedad_max: showAdvanced ? humidityMax : 100,
-        requiere_sin_lluvia: false
+        humedad_min: humedadRange[0],
+        humedad_max: humedadRange[1],
+        vis_min_km: visMinKm,
+        requiere_sin_lluvia: requiereLluvia,
+        descripcion: name.trim(),
+        estado: estado
       };
       onAdd(actividad);
       onClose();
@@ -123,6 +144,16 @@ const AddActividadModal: React.FC<AddActividadModalProps> = ({ onClose, onAdd, i
               value={name}
               onChange={e => setName(e.target.value)}
               required
+            />
+          </div>
+          <div className="form-group">
+            <label> Descripción / Notas </label>
+            <textarea
+            className="form-input"
+            value={descripcion}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Puedes agregar una nota o detalle sobre esta actividad"
+            rows={3}
             />
           </div>
           <div className="form-group">
@@ -195,6 +226,16 @@ const AddActividadModal: React.FC<AddActividadModalProps> = ({ onClose, onAdd, i
             </div>
           </div>
           <div className="form-group">
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={requiereLluvia}
+                onChange={(e) => setRequiereLluvia(e.target.checked)}
+              />
+              Requiere lluvia
+            </label>
+          </div>
+          <div className="form-group">
             <button
               type="button"
               onClick={() => setShowAdvanced((prev) => !prev)}
@@ -205,6 +246,16 @@ const AddActividadModal: React.FC<AddActividadModalProps> = ({ onClose, onAdd, i
           </div>
           {showAdvanced && (
             <div className="advanced-params">
+              <div className="form-group">
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={estado}
+                    onChange={(e) => setEstado(e.target.checked)}
+                  />
+                  Activar actividad <span style={{ fontSize: '12px', color: '#888' }}>(si no está activada, no aparecerá en recomendaciones)</span>
+                </label>
+              </div>
               <div className="form-group">
                 <label>Rango de velocidad del viento (m/s)</label>
                 <div className="slider-container">
@@ -255,14 +306,14 @@ const AddActividadModal: React.FC<AddActividadModalProps> = ({ onClose, onAdd, i
                 </div>
               </div>
               <div className="form-group">
-                <label>Humedad máxima permitida (%)</label>
+                <label>Rango de humedad permitida (%)</label>
                 <div className="slider-container">
                   <Range
                     step={1}
                     min={0}
                     max={100}
-                    values={[humidityMax]}
-                    onChange={values => setHumidityMax(values[0])}
+                    values={humedadRange}
+                    onChange={values => setHumedadRange([Math.min(values[0], values[1]), Math.max(values[0], values[1])])}
                     renderTrack={({ props, children }) => (
                       <div
                         {...props}
@@ -270,8 +321,8 @@ const AddActividadModal: React.FC<AddActividadModalProps> = ({ onClose, onAdd, i
                         style={{
                           ...props.style,
                           background: getTrackBackground({
-                            values: [humidityMax],
-                            colors: ['#548BF4', '#ccc'],
+                            values: humedadRange,
+                            colors: ['#ccc', '#548BF4', '#ccc'],
                             min: 0,
                             max: 100
                           })
@@ -280,7 +331,7 @@ const AddActividadModal: React.FC<AddActividadModalProps> = ({ onClose, onAdd, i
                         {children}
                       </div>
                     )}
-                    renderThumb={({ props, value }) => (
+                    renderThumb={({ index, props, value }) => (
                       <div
                         {...props}
                         className="slider-thumb"
@@ -290,10 +341,50 @@ const AddActividadModal: React.FC<AddActividadModalProps> = ({ onClose, onAdd, i
                         </div>
                       </div>
                     )}
+                    allowOverlap={false}
+                    draggableTrack={false}
                   />
                   <div className="slider-labels">
                     <span>0%</span>
                     <span>100%</span>
+                  </div>
+                </div>
+              </div>  
+              <div className="form-group">
+                <label>Visibilidad mínima permitida (km)</label>
+                <div className="slider-container">
+                  <Range
+                    step={1}
+                    min={0}
+                    max={50}  // Ajusta el máximo según lo que consideres válido
+                    values={[visMinKm]}
+                    onChange={values => setVisMinKm(values[0])}
+                    renderTrack={({ props, children }) => (
+                      <div
+                        {...props}
+                        className="slider-track"
+                        style={{
+                          ...props.style,
+                          background: getTrackBackground({
+                            values: [visMinKm],
+                            colors: ['#548BF4', '#ccc'],
+                            min: 0,
+                            max: 50
+                          })
+                        }}
+                      >
+                        {children}
+                      </div>
+                    )}
+                    renderThumb={({ props, value }) => (
+                      <div {...props} className="slider-thumb">
+                        <div className="slider-thumb-label">{`${value} km`}</div>
+                      </div>
+                    )}
+                  />
+                  <div className="slider-labels">
+                    <span>0 km</span>
+                    <span>50 km</span>
                   </div>
                 </div>
               </div>

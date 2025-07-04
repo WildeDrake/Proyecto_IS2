@@ -19,6 +19,24 @@
   box-shadow: 0 2px 24px rgba(0,0,0,0.18);
 }
 
+input[type="text"],
+textarea {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-family: inherit;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+.form-hint {
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+}
+
 .form-group {
   margin-bottom: 22px;
 }
@@ -36,6 +54,13 @@
   display: flex;
   align-items: center;
   gap: 6px; /* Espacio entre el checkbox y el texto */
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
 }
 
 .slider-container {
@@ -106,3 +131,4 @@
   display: flex;
   gap: 10px;
 }
+

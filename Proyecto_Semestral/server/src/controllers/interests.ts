@@ -17,7 +17,8 @@ export const createInterest = async (req: Request, res: Response) => {
     humedad_max = 100,
     vis_min_km = 0,
     requiere_sin_lluvia = false,
-    descripcion = null
+    descripcion = null,
+    estado = true
   } = req.body;
 
   if (!userId || !name || !Array.isArray(climas_permitidos)) {
@@ -30,9 +31,9 @@ export const createInterest = async (req: Request, res: Response) => {
     const insertInterest = await client.query(
       `INSERT INTO interests 
       (name, climas_permitidos, temp_min, temp_max, viento_min, viento_max, 
-       humedad_min, humedad_max, vis_min_km, requiere_sin_lluvia, descripcion) 
+       humedad_min, humedad_max, vis_min_km, requiere_sin_lluvia, descripcion, estado) 
       VALUES 
-      ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) 
+      ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) 
       RETURNING id, name`,
       [
         name,
@@ -45,7 +46,8 @@ export const createInterest = async (req: Request, res: Response) => {
         humedad_max,
         vis_min_km,
         requiere_sin_lluvia,
-        descripcion
+        descripcion,
+        estado
       ]
     );
 
