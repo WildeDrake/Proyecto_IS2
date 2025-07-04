@@ -70,6 +70,11 @@ const RegisterPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (password.length < 4 || password.length > 12) {
+      setError('La contraseña debe tener entre 4 y 12 caracteres.');
+      return;
+    }
+
     try {
       await authService.register(name, email, password);
       const token = await authService.login(email, password); 
@@ -107,7 +112,7 @@ const RegisterPage = () => {
                 onInvalid={handleInvalid}
                 onInput={handleInput}
                 required
-                placeholder=""
+                placeholder="Ej: Pepe"
                 title=""
               />
             </div>
@@ -121,7 +126,7 @@ const RegisterPage = () => {
                 onInvalid={handleInvalid}
                 onInput={handleInput}
                 required
-                placeholder=""
+                placeholder="Ej: pepito@gmail.com"
                 title=""
               />
             </div>
@@ -135,7 +140,7 @@ const RegisterPage = () => {
                 onInvalid={handleInvalid}
                 onInput={handleInput}
                 required
-                placeholder=""
+                placeholder="Introduzca una contraseña de 4 a 12 caracteres"
                 title=""
               />
             </div>
