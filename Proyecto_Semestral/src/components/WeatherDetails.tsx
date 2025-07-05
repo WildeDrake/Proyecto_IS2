@@ -7,9 +7,7 @@ import '../styles/WeatherDetails.css';
 
 const WeatherDetails: React.FC<{ weather: WeatherData }> = ({ weather }) => {
   const [recoGenericas, setRecoGenericas] = useState<string[]>([]);
-  const [actividadRecomendadas, setActividadRecomendadas] = useState<
-    { actividad: string; recomendacion: string }[] | null
-  >(null);
+  const [actividadRecomendadas, setActividadRecomendadas] = useState<any[] | null>(null);
   const [recomendacionBase, setRecomendacionBase] = useState<string>("");
   const [isLogged, setIsLogged] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -89,19 +87,32 @@ const WeatherDetails: React.FC<{ weather: WeatherData }> = ({ weather }) => {
         <p>Velocidad del viento: {weather.wind.speed} m/s</p>
 
         {/* Personalizadas (si está logueado) */}
-        {isLogged && actividadRecomendadas && actividadRecomendadas.length > 0 && (
-          <div className="recommendations-personalized">
-            <h3>🌟 Recomendaciones Personalizadas</h3>
-            <h4>{recomendacionBase}</h4>
-            <ul>
-              {actividadRecomendadas.map((act, index) => (
-                <li key={index}>
-                  <strong>{act.actividad}:</strong> {act.recomendacion}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+        {isLogged && (
+        <div className="recommendations-personalized">
+          <h3>🌟 Recomendaciones Personalizadas</h3>
+          {actividadRecomendadas && actividadRecomendadas.length > 0 ? (
+            <>
+              <h4>{recomendacionBase}</h4>
+              <div className="actividad-grid">
+                {actividadRecomendadas.map((act, index) => (
+                  <div className="actividad-card" key={index}>
+                    <span className="tooltip">
+                      <div>{act.descripcion || "Sin descripción"}</div>
+                      <div><strong>Temperatura:</strong> {act.temp_min}°C - {act.temp_max}°C</div>
+                      <div><strong>Viento:</strong> {act.viento_min} m/s - {act.viento_max} m/s</div>
+                      <div><strong>Humedad:</strong> {act.humedad_min ?? 0}% - {act.humedad_max ?? 100}%</div>
+                      <div><strong>Visibilidad mínima:</strong> {act.vis_min_km} km</div>
+                    </span>
+                    <strong>{act.name}</strong>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            <p><strong>Sin coincidencias:</strong> Ninguna actividad coincide con las condiciones actuales. ¡Pero aún puedes disfrutar tu día! 🌈</p>
+          )}
+        </div>
+      )}
 
         {/* Generales (siempre visibles) */}
         {recoGenericas.length > 0 && (

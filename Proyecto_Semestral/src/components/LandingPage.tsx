@@ -6,7 +6,6 @@ import ForecastGrid from "../components/ForecastGrid";
 import SearchBar from "../components/SearchBar";
 import WeatherDetails from "../components/WeatherDetails";
 import FavoritesList from "../components/FavoritesList";
-import UbicacionActual from "./ubicacionActual";
 import ErrorMessage from "./ErrorMessage";
 import Loading from "./Loading";
 import { useNavigate } from 'react-router-dom';
@@ -20,6 +19,8 @@ import { reverseGeocode } from "../services/reverseGeocode";
 interface LandingPageProps {
   onWeatherSearch?: (city: string) => void;
 }
+
+const DEFAULT_CITY = "Concepción";
 
 const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
   const navigate = useNavigate();
@@ -54,45 +55,27 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
     { id: 5, image: '/activities/ski.jpg', alt: 'Esquí' },
   ];
   const [userCoords, setUserCoords] = useState<[number, number] | null>(null);
-  const [detectedCity, setDetectedCity] = useState<string>("");
 
   const location = useLocation();
 
   useEffect(() => {
-    const getCoords = async () => {
+    const getLocationAndWeather = async () => {
+      setLoading(true);
       try {
         const ubicacion = await Geolocalizar();
         setUserCoords([ubicacion.lat, ubicacion.lon]);
-        // Obtener ciudad real usando reverseGeocode
         const direccion = await reverseGeocode(ubicacion.lat, ubicacion.lon);
-        // Extraer solo la ciudad (antes de la primera coma)
         const ciudad = direccion.split(",")[0].trim();
-        setDetectedCity(ciudad);
-        // Buscar clima automáticamente para la ciudad detectada
         await handleFetchWeather(ciudad, "");
       } catch (error) {
-        console.error("No se pudo obtener la ubicación del usuario");
-        // Si falla, puedes dejar el fallback a Concepción si lo deseas
-        await handleFetchWeather("Concepción", "");
-      }
-    };
-    getCoords();
-  }, []);
-
-  useEffect(() => {
-    const loadLocalWeather = async () => {
-      try {
-        setLoading(true);
-        await handleFetchWeather("Concepción", "");
-      } catch (err) {
-        console.error("No se pudo cargar el clima local:", err);
+        await handleFetchWeather(DEFAULT_CITY, "");
       } finally {
         setLoading(false);
       }
     };
-    
-    loadLocalWeather();
+    getLocationAndWeather();
   }, []);
+
 
   useEffect(() => {
     if (location.state?.showLogin) {
@@ -102,6 +85,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
     }
   }, [location.state?.showLogin]);
 
+  
+  
   const handleFetchWeather = async (cityName: string, countryName: string) => {
     setLoading(true);
     setError("");
@@ -133,8 +118,30 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
     setIsLogin(!isLogin);
   };
 
+  const refrescarUbicacion = async () => {
+    try {
+      setLoading(true);
+      setError("");
+      const ubicacion = await Geolocalizar();
+      setUserCoords([ubicacion.lat, ubicacion.lon]);
+
+      const direccionCompleta = await reverseGeocode(ubicacion.lat, ubicacion.lon);
+      // Extraemos ciudad para buscar clima
+      const ciudad = direccionCompleta.split(",")[0].trim();
+
+      // Actualizamos clima con la ciudad detectada
+      await handleFetchWeather(ciudad, "");
+    } catch (err) {
+      setError("No se pudo obtener la ubicación");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
   return (
     <div className="landing-page">
+      
       {/* Navbar */}
       <nav className="navbar">
         <div className="navbar-brand">
@@ -178,7 +185,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
       <div className="hero-section">
         <div className="weather-card">
           <h1>
-            {weather ? weather.name : detectedCity || "Cargando..."}
+            {weather ? weather.name : "Cargando..."}
           </h1>
           <div className="weather-info">
             <div>
@@ -208,9 +215,17 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
       {loading && <Loading />}
       {error && <ErrorMessage message={error} />}
 
-      {/* Ubicación Actual */}
-      <div className="location-container">
-        <UbicacionActual />
+      {/* Refrescar */}
+      <div className="location-container center-button">
+        <button
+          onClick={refrescarUbicacion}
+          className="mt-3 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition">
+          🔄 Refrescar ubicación
+        </button>
+        {/* Mostrar error si hay */}
+        {error && (
+          <p className="mt-2 text-red-500">{error}</p>
+        )}
       </div>
 
       {/* Sección de detalles del clima (visible solo después de buscar) */}

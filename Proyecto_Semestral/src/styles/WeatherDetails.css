@@ -104,3 +104,50 @@
   content: "💡";
   flex-shrink: 0;
 }
+
+.actividad-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.actividad-card {
+  background-color: #f3f3f3;
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.actividad-card:hover {
+  background-color: #e0e0e0;
+}
+
+.tooltip {
+  visibility: hidden;
+  opacity: 0;
+  width: 180px;
+  background-color: #444;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 6px 8px;
+  position: absolute;
+  z-index: 10;
+  bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: opacity 0.2s;
+  font-size: 12px;
+  pointer-events: none;
+}
+
+.actividad-card:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}

@@ -24,17 +24,7 @@ export async function getActRecomendadas(condiciones: any) {
     cumpleCondiciones(act, condiciones, climaId)
   );
 
-  if (actividadesValidas.length === 0) {
-    return [{
-      actividad: "Sin coincidencias",
-      recomendacion: "Ninguna actividad coincide con las condiciones actuales. ¡Pero aún puedes disfrutar tu día!"
-    }];
-  }
-
-  return actividadesValidas.map((act: any) => ({
-    ...act,
-    recomendacion: `Ideales para un clima como el de hoy.`
-  }));
+  return actividadesValidas;
 }
 
 function cumpleCondiciones(actividad: any, cond: any, climaId: number): boolean {

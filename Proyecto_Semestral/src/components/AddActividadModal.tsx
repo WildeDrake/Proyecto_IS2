@@ -122,7 +122,7 @@ const AddActividadModal: React.FC<AddActividadModalProps> = ({ onClose, onAdd, i
         humedad_max: humedadRange[1],
         vis_min_km: visMinKm,
         requiere_sin_lluvia: requiereLluvia,
-        descripcion: name.trim(),
+        descripcion: descripcion.trim(),
         estado: estado
       };
       onAdd(actividad);

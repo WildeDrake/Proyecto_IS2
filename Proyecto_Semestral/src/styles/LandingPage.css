@@ -119,8 +119,6 @@ body {
   font-size: 18px;
 }
 
-
-
 .navbar-actions {
   display: flex;
   gap: 10px;  /* Espacio entre botones */
@@ -237,6 +235,12 @@ body {
 .location-container {
   padding: 0 20px;
   margin-bottom: 20px;
+}
+
+.center-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Detalles del clima */
