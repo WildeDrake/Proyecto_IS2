@@ -27,8 +27,16 @@ const useFavorites = () => {
     await apiRemove(city);
     setFavorites(favorites.filter((c) => c !== city));
   };
+  const reloadFavorites = async () => {
+    try {
+      const favs = await getFavorites();
+      setFavorites(favs);
+    } catch {
+      setFavorites([]);
+    }
+  };
 
-  return { favorites, addFavorite, removeFavorite };
+  return { favorites, addFavorite, removeFavorite, reloadFavorites };
 };
 
 export default useFavorites;
