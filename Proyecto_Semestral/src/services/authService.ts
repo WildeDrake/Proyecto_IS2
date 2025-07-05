@@ -33,7 +33,10 @@ export const authService = {
     }
 
     const data = await response.json();
-    return data.token;
+    if (data.user) {
+      localStorage.setItem('user', JSON.stringify(data.user));
+    }
+    return data;
   },
 
   async logout() {

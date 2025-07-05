@@ -4,7 +4,7 @@ import { authService } from '../services/authService';
 import '../styles/Auth.css';
 
 interface LoginFormProps {
-  onSuccess: () => void;
+  onSuccess: (userId: number) => void;
   onToggleForm: () => void;
 }
 
@@ -45,10 +45,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onToggleForm }) => {
     setError('');
     
     try {
-      const token = await authService.login(email, password);
-      if (token) {
-        localStorage.setItem('token', token);
-        onSuccess();
+      const result = await authService.login(email, password);
+      if (result.token) {
+        localStorage.setItem('token', result.token);
+        onSuccess(result.user.id);
       }
     } catch (err: any) {
       // Mostrar el mensaje de error específico del backend

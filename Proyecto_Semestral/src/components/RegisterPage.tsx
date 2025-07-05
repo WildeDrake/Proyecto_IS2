@@ -77,9 +77,9 @@ const RegisterPage = () => {
 
     try {
       await authService.register(name, email, password);
-      const token = await authService.login(email, password); 
-      if (token) {
-        localStorage.setItem('token', token);
+      const loginResult = await authService.login(email, password); 
+      if (loginResult.token) {
+        localStorage.setItem('token', loginResult.token);
 
         for (const actividad of interesesElegidos) {
           await createInterest({
@@ -87,7 +87,8 @@ const RegisterPage = () => {
           });
         }
 
-        navigate('/');
+        // Redirigir al perfil del usuario
+        navigate(`/user/${loginResult.user.id}`);
       }
     } catch (err) {
       setError('Error al registrarse. Verifica tus datos.');

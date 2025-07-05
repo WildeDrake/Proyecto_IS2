@@ -112,7 +112,14 @@ export const login = async (req: Request, res: Response) => {
       { expiresIn: '24h' }
     );
 
-    res.json({ token });
+    res.json({ 
+      token,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email
+      }
+    });
   } catch (err) {
     res.status(500).json({ error: 'Error al iniciar sesión' });
   }

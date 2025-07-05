@@ -36,6 +36,7 @@ const Dashboard: React.FC = () => {
   const handleLogout = () => {
     authService.logout();
     window.location.assign('/');
+    window.location.reload();
   };
   useEffect(() => {
     if (!localStorage.getItem('token')) {

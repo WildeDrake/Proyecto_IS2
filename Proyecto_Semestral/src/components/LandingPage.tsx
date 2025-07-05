@@ -15,6 +15,7 @@ import useFavorites from "../hooks/useFavorites";
 import LoginForm from './LoginForm';
 import { useLocation } from 'react-router-dom';
 import { reverseGeocode } from "../services/reverseGeocode";
+import { authService } from '../services/authService';
 
 interface LandingPageProps {
   onWeatherSearch?: (city: string) => void;
@@ -39,6 +40,18 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
     return !!localStorage.getItem('token');
   });
+
+  useEffect(() => {
+    const checkAuth = () => {
+      setIsAuthenticated(!!localStorage.getItem('token'));
+    };
+    checkAuth();
+        window.addEventListener('storage', checkAuth);
+    
+    return () => {
+      window.removeEventListener('storage', checkAuth);
+    };
+  }, []);
 
   const today = new Date();
   const dayNames = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
@@ -108,12 +121,6 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
     }
   };
 
-  const handleAuthSuccess = () => {
-    setIsAuthenticated(true);
-    setShowAuthModal(false);
-    window.location.reload();
-  };
-
   const toggleAuthForm = () => {
     setIsLogin(!isLogin);
   };
@@ -156,12 +163,10 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
           <button 
             className="btn-login" 
             onClick={() => {
-              console.log('Botón clickeado');
               if (isAuthenticated) {
-                localStorage.removeItem('token');
-                localStorage.clear();
+                authService.logout();
                 setIsAuthenticated(false);
-                window.location.assign('/');
+                window.location.reload();
               } else {
                 setShowAuthModal(true);
                 setIsLogin(true);
@@ -173,7 +178,15 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
           {isAuthenticated && (
             <button 
               className="btn-profile"
-              onClick={() => window.location.href = '/dashboard'}
+              onClick={() => {
+                const userStr = localStorage.getItem('user');
+                if (userStr) {
+                  const user = JSON.parse(userStr);
+                  window.location.href = `/user/${user.id}`;
+                } else {
+                  window.location.href = '/dashboard';
+                }
+              }}
             >
               Mi Perfil
             </button>
@@ -356,15 +369,14 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
             >
               ×
             </button>
-            {<LoginForm 
-                onSuccess={() => {
-                  handleAuthSuccess();
-                  setShowAuthModal(false);
-                }} 
-                onToggleForm={toggleAuthForm} 
-              />
-  
-            }
+            <LoginForm 
+              onSuccess={(userId) => {
+                setShowAuthModal(false);
+                setIsAuthenticated(true);
+                window.location.href = `/user/${userId}`;
+              }}
+              onToggleForm={toggleAuthForm} 
+            />
           </div>
         </div>
       )}
