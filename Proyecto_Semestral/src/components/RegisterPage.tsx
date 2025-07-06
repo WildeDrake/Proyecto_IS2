@@ -149,7 +149,7 @@ const RegisterPage = () => {
               <label>Intereses:</label>
               <div className="interests-grid">
                 { sugerenciasIniciales.map((actividad, index) => (
-                  <label key={index}>
+                  <label key={index} className="interest-checkbox">
                     <input
                       type="checkbox"
                       checked={interesesElegidos.includes(actividad.name)}

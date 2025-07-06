@@ -77,11 +77,12 @@
   background-color: #f8f9fa;
 }
 
-.auth-form .interest-checkbox input[type="checkbox"] {
+.auth-form .interest-checkbox input[type="checkbox"],
+.interest-checkbox input[type="checkbox"] {
   width: 18px;
   height: 18px;
   cursor: pointer;
-  background-color: white;
+  background-color: white !important;
   border: 2px solid #ddd;
   border-radius: 3px;
   appearance: none;
@@ -89,14 +90,17 @@
   -moz-appearance: none;
   position: relative;
   outline: none;
+  flex-shrink: 0;
 }
 
-.auth-form .interest-checkbox input[type="checkbox"]:checked {
-  background-color: white;
+.auth-form .interest-checkbox input[type="checkbox"]:checked,
+.interest-checkbox input[type="checkbox"]:checked {
+  background-color: white !important;
   border-color: #3498db;
 }
 
-.auth-form .interest-checkbox input[type="checkbox"]:checked::after {
+.auth-form .interest-checkbox input[type="checkbox"]:checked::after,
+.interest-checkbox input[type="checkbox"]:checked::after {
   content: '✓';
   position: absolute;
   top: 50%;

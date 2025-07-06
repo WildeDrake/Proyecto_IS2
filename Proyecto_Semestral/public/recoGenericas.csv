@@ -1,32 +1,56 @@
 Tipo;Operador;Valor;Recomendacion
 weather.main;=;Clear;¡Es un día soleado! Aprovecha para hacer actividades al aire libre. ☀️
+weather.main;=;Clear;Día perfecto para un picnic, caminar o hacer deporte al aire libre. ☀️
+weather.main;=;Clear;El sol está brillando, ideal para visitar parques o hacer fotografía. ☀️
 weather.main;=;Clouds;Está un poco nublado. Lleva un abrigo ligero por si acaso. ☁️
+weather.main;=;Clouds;Nublado y templado, buen momento para paseos o actividades suaves. ☁️
+weather.main;=;Clouds;Clima agradable para caminar o hacer ejercicio sin el sol directo. ☁️
 weather.main;=;Rain;¡Va a llover! No olvides tu paraguas o impermeable. ☔
+weather.main;=;Rain;Día perfecto para actividades en interiores, lectura o relajación. ☔
+weather.main;=;Rain;Buen momento para visitar museos, centros comerciales o cafeterías. ☔
 weather.main;=;Snow;¡Está nevando! Si vas a salir, asegúrate de estar abrigado y lleva botas para evitar resbalones. ❄️
+weather.main;=;Snow;Perfecto para actividades de invierno si tienes el equipo adecuado. ❄️
 weather.main;=;Thunderstorm;¡Cuidado! Tormenta eléctrica en camino. Mejor quédate en casa y mantente seguro. ⚡
 weather.main;=;Drizzle;Llueve suavemente. Lleva una chaqueta ligera por si acaso! 🌧️
+weather.main;=;Drizzle;Llovizna ligera, ideal para actividades tranquilas en interiores. 🌧️
 weather.main;=;Mist;Hay niebla, así que ten cuidado al conducir y mantén una buena visibilidad. 🌫️
 weather.main;=;Haze;La visibilidad está reducida por la niebla. Mantente en lugares seguros si vas a salir. 🌫️
 weather.main;=;Dust;Hay tormenta de polvo. Si tienes problemas respiratorios, mejor quédate adentro. 🌪️
 weather.main;=;Fog;La niebla está muy densa, si sales, ten mucho cuidado al conducir. 🌁
 weather.main;=;Ash;Hay ceniza en el aire debido a una erupción volcánica. Mantente alejado del exterior y usa una mascarilla si es necesario. 🌋
 weather.main;=;Squall;Viento fuerte en camino. Asegúrate de no estar cerca de árboles o estructuras que puedan caer. 🌬️
-temp;>;30;Hace mucho calor, usa ropa ligera. ☀️
+temp;>;30;Hace mucho calor, usa ropa ligera y mantente hidratado. ☀️
+temp;>;30;Temperatura alta, busca lugares con sombra o aire acondicionado. ☀️
+temp;>;30;Calor intenso, perfecto para actividades acuáticas o piscina. ☀️
+temp;entre;25,30;Temperatura cálida y agradable, ideal para actividades al aire libre. 🌤️
 temp;entre;20,30;Temperatura agradable, usa ropa ligera. 👕
-temp;entre;10,20;Temperatura medianamente helada, evita ropa ligera. 🧣🧤
+temp;entre;20,25;Clima templado perfecto, ideal para cualquier actividad. 🌤️
+temp;entre;15,20;Temperatura fresca y cómoda, perfecto para caminar o hacer ejercicio. 🍃
+temp;entre;10,20;Temperatura fresca, lleva una chaqueta ligera. 🧥
+temp;entre;10,15;Clima fresco, perfecto para actividades que requieren movimiento. 🍃
+temp;entre;5,10;Temperatura fría, abrígate bien antes de salir. 🧣
 temp;<;10;Hace frío, abrígate bien. ❄️
+temp;<;5;Mucho frío, mejor quedarse en lugares cálidos. ❄️
+temp;<;0;Temperatura bajo cero, extrema precaución al salir. ❄️
 wind_speed;>;12;¡Cuidado! El viento es extremadamente fuerte. Es mejor evitar salir y mantenerse en lugares seguros. 🌀
 wind_speed;entre;8,12;El viento está muy fuerte. Mejor quédate en lugares cerrados o asegúrate de estar bien cubierto al salir. 🌬️💨
 wind_speed;entre;5,8;Hace viento fuerte, ten cuidado al caminar y asegúrate de llevar algo de abrigo si estás fuera. 🌪️
-wind_speed;entre;3,5;El viento comienza a sentirse más fuerte. Toma precauciones con objetos ligeros que puedan volar. 🌬️💨
-wind_speed;entre;1,3;Hay una brisa ligera, perfecta para un paseo al aire libre. No olvides tu sombrero o gafas de sol. 🌬️
-wind_speed;<;1;El viento está casi calmado, ideal para caminar o hacer actividades al aire libre. 🌤️}
-humidity;>;60;Hace mucho calor y humedad. Evita estar fuera mucho tiempo. 🌫️
+wind_speed;entre;3,5;Viento moderado, ten cuidado con objetos ligeros. 🌬️
+wind_speed;entre;1,3;Hay una brisa ligera, perfecta para un paseo al aire libre. 🌬️
+wind_speed;entre;1,3;Brisa suave ideal para actividades tranquilas al exterior. 🌬️
+wind_speed;<;1;El viento está casi calmado, ideal para caminar o hacer actividades al aire libre. 🌤️
+wind_speed;<;1;Aire tranquilo, perfecto para actividades delicadas al aire libre. 🌤️
+humidity;>;80;Humedad muy alta, el aire se siente pesado. Mantente hidratado. 🌫️
+humidity;entre;60,80;Humedad alta, puede sentirse un poco sofocante. 🌫️
 humidity;entre;40,60;El clima está cómodo, no es tan seco ni tan húmedo. 🌤️
-humidity;<;40;El aire está seco, hidrátate bien y usa crema hidratante. 💧
+humidity;entre;30,40;Humedad baja, el aire se siente seco pero cómodo. 💧
+humidity;<;30;El aire está muy seco, hidrátate bien y usa crema hidratante. 💧
+humidity;<;20;Aire extremadamente seco, protege tu piel y bebe mucha agua. 💧
 visibility;>;8000;Visibilidad excelente. Es un gran día para cualquier actividad al aire libre! 🌞
+visibility;>;8000;Vista despejada, perfecto para paisajismo o fotografía. 🌞
 visibility;entre;4000,8000;Visibilidad moderada. Si estás conduciendo, ten precaución. 🚗
-visibility;<;4000;La visibilidad es baja. Mejor quedarse en casa o tomar precauciones si vas a salir. 🚶‍♂️🌫️
+visibility;entre;2000,4000;Visibilidad reducida, mantente alerta si sales. 🌫️
+visibility;<;2000;La visibilidad es muy baja. Mejor quedarse en casa o tomar precauciones extremas. 🌫️
 rain.pop;>;70;¡La lluvia es casi segura! Es mejor quedarte en casa o hacer planes en lugares cerrados. ☔🌧️
 rain.pop;entre;50,70;Es bastante probable que llueva. Si tienes planes al aire libre, asegúrate de estar preparado con ropa impermeable o un paraguas. 🌧️☔
 rain.pop;entre;30,50;Hay una probabilidad moderada de lluvia. Planea tus actividades al aire libre, pero no olvides llevar un paraguas o capa de lluvia. 🌧️

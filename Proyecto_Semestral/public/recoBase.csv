@@ -1,8 +1,11 @@
 ﻿weather_main;Tipo;Operador;Valor;Recomendación_Base
 Clear;temp;>;umbral_max;Hace mucho calor, prefiere actividades bajo sombra o en interiores.
 Clear;temp;entre;umbral_calido,umbral_max;Día cálido y despejado, ideal para caminatas o actividades al aire libre.
+Clear;temp;entre;umbral_calido,umbral_max;Sol brillante y cálido, perfecto para deportes al aire libre.
 Clear;temp;entre;umbral_frio,umbral_calido;Clima templado y despejado, aprovecha para salir o hacer ejercicio moderado.
+Clear;temp;entre;umbral_frio,umbral_calido;Día soleado y agradable, ideal para un picnic o paseo en el parque.
 Clear;temp;entre;umbral_min,umbral_frio;Un poco fresco pero agradable, considera un abrigo ligero si sales.
+Clear;temp;entre;umbral_min,umbral_frio;Sol suave y fresco, buen momento para actividades tranquilas al aire libre.
 Clear;temp;<;umbral_min;Hace bastante frío aunque esté despejado, considera actividades en casa.
 Clouds;temp;>;umbral_max;Día caluroso con nubosidad, busca sombra y mantente hidratado.
 Clouds;temp;entre;umbral_calido,umbral_max;Clima cálido con nubes, perfecto para actividades tranquilas al aire libre.

@@ -41,7 +41,9 @@ const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <nav className="navbar">
-      <div className="navbar-brand">Tu Clima</div>
+      <div className="navbar-brand">
+        <img src="/images/logo.png" alt="Tu Clima" className="navbar-logo" />
+      </div>
       
       {showSearchBar && (
         <form className="search-container" onSubmit={onSearch}>
