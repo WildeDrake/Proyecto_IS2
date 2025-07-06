@@ -6,7 +6,6 @@ import ForecastGrid from "../components/ForecastGrid";
 import SearchBar from "../components/SearchBar";
 import WeatherDetails from "../components/WeatherDetails";
 import FavoritesList from "../components/FavoritesList";
-import Loading from "./Loading";
 import { useNavigate } from 'react-router-dom';
 import { fetchWeather, fetchForecast } from "../services/weatherService";
 import { Geolocalizar } from "../services/Geolocalizar";
@@ -217,10 +216,14 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
           setCountry={setCountry} 
           fetchWeather={handleFetchWeather}
         />
+        
+        {/* Mostrar carga dentro del mismo bloque */}
+        {loading && (
+          <div className="loading-message-inline">
+            Cargando...
+          </div>
+        )}
       </div>
-      
-      {/* Mostrar carga */}
-      {loading && <Loading />}
 
       <div className="weather-section weather-section-refresh" style={{ marginTop: '0' }}>
         <div className="center-button" style={{ marginBottom: weather ? '20px' : '0' }}>
