@@ -9,7 +9,7 @@ async function initializeDatabase() {
     // Conexión a la base de datos postgres para crear la base de datos si no existe
     const mainPool = new Pool({
         user: process.env.DB_USER || 'postgres',
-        password: process.env.DB_PASSWORD || '2347',
+        password: process.env.DB_PASSWORD || '123',
         host: process.env.DB_HOST || 'localhost',
         port: parseInt(process.env.DB_PORT || '5432'),
         database: 'postgres'
