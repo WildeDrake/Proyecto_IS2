@@ -14,6 +14,7 @@ import LoginForm from './LoginForm';
 import { useLocation } from 'react-router-dom';
 import { reverseGeocode } from "../services/reverseGeocode";
 import { authService } from '../services/authService';
+import { recommendationService, UnifiedRecommendations } from '../services/recommendationService';
 
 interface LandingPageProps {
   onWeatherSearch?: (city: string) => void;
@@ -96,8 +97,6 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
     }
   }, [location.state?.showLogin]);
 
-  
-  
   const handleFetchWeather = async (cityName: string, countryName: string) => {
     setLoading(true);
     setError("");
@@ -247,7 +246,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
             </button>
           </div>
 
-         <WeatherDetails weather={weather} />
+         <WeatherDetails key={favorites.join("-")} weather={weather} />
 
          <div className="panorama-section">
           <div className="panorama-grid">
@@ -275,7 +274,6 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
           
           <MapView weather={weather} userCoords={userCoords} />
 
-
           <div className="weather-favorites-container">
           <FavoritesList
               favorites={favorites}
@@ -286,8 +284,6 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
           </>
         )}
       </div>
-
-
 
       {/* Sección de actividades recomendadas */}
       <div className="activities-section">

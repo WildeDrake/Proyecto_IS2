@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { WeatherData } from "../types/weather";
 import { recommendationService, UnifiedRecommendations } from "../services/recommendationService";
 import RecommendationCard from "./RecommendationCard";
+import useFavorites from "../hooks/useFavorites";
+import { fetchWeather } from "../services/weatherService";
 import '../styles/WeatherDetails.css';
 
 const WeatherDetails: React.FC<{ weather: WeatherData }> = ({ weather }) => {
@@ -9,6 +11,10 @@ const WeatherDetails: React.FC<{ weather: WeatherData }> = ({ weather }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showDetails, setShowDetails] = useState(false);
+  const { favorites} = useFavorites();
+  const [favoriteRecommendations, setFavoriteRecommendations] = useState<
+    { city: string; recommendations: UnifiedRecommendations }[]
+  >([]);
 
   useEffect(() => {
     const fetchRecomendaciones = async () => {
@@ -29,6 +35,30 @@ const WeatherDetails: React.FC<{ weather: WeatherData }> = ({ weather }) => {
     fetchRecomendaciones();
   }, [weather]);
 
+  useEffect(() => {
+    const cargarRecomendacionesFavoritas = async () => {
+      const results = await Promise.all(
+        favorites.map(async (city) => {
+          try {
+            const weatherData = await fetchWeather(city, "");
+            const recommendations = await recommendationService.getUnifiedRecommendations(weatherData);
+            return { city, recommendations };
+          } catch (error) {
+            console.error(`Error al obtener recomendaciones para ${city}`, error);
+            return null;
+          }
+        })
+      );
+      setFavoriteRecommendations(results.filter(Boolean) as typeof favoriteRecommendations);
+    };
+
+    if (favorites.length > 0) {
+      cargarRecomendacionesFavoritas();
+    } else {
+      setFavoriteRecommendations([]); // limpiar si se vacía
+    }
+  }, [favorites]);
+    
   if (isLoading) {
     return (
       <div className="flex gap-4 items-start">
@@ -132,6 +162,63 @@ const WeatherDetails: React.FC<{ weather: WeatherData }> = ({ weather }) => {
             })()}
           </div>
         )}
+
+        {/* Actividades Personalizadas desde Ubicaciones Favoritas (agrupadas) */}
+        {favoriteRecommendations.length > 0 && (
+          <div className="recommendations-personalized">
+            <h3>🌍 Actividades desde tus Ubicaciones Favoritas</h3>
+            {(() => {
+              const actividadMap = new Map<string, {
+                razones: string[],
+                ubicaciones: string[],
+                factores: Set<string>
+              }>();
+
+              // Recolectar y agrupar actividades por texto base
+              favoriteRecommendations.forEach(({ city, recommendations }) => {
+                const personalizadas = recommendations.recommendations.filter(r => r.type === 'personalized');
+
+                personalizadas.forEach((activity) => {
+                  const nombreBase = activity.text.split(' - ')[0];
+                  if (!actividadMap.has(nombreBase)) {
+                    actividadMap.set(nombreBase, {
+                      razones: [activity.reason],
+                      ubicaciones: [city],
+                      factores: new Set(activity.weatherFactors)
+                    });
+                  } else {
+                    const entry = actividadMap.get(nombreBase)!;
+                    entry.razones.push(activity.reason);
+                    entry.ubicaciones.push(city);
+                    activity.weatherFactors.forEach(f => entry.factores.add(f));
+                  }
+                });
+              });
+
+              if (actividadMap.size === 0) {
+                return <p>No hay actividades personalizadas para tus ubicaciones favoritas.</p>;
+              }
+
+              return (
+                <div className="actividad-grid">
+                  {[...actividadMap.entries()].map(([nombreBase, data]) => (
+                    <div key={nombreBase} className="actividad-card">
+                      <span className="tooltip">
+                        <div><strong>Descripción:</strong> {data.razones.join('; ')}</div>
+                        <div><strong>Ubicaciones:</strong> {data.ubicaciones.join(', ')}</div>
+                        {data.factores.size > 0 && (
+                          <div><strong>Factores:</strong> {[...data.factores].map(getFactorTranslation).join(', ')}</div>
+                        )}
+                      </span>
+                      <strong>{nombreBase}</strong>
+                    </div>
+                  ))}
+                </div>
+              );
+            })()}
+          </div>
+        )}
+
 
         {/* Recomendaciones Generales */}
         {(() => {
