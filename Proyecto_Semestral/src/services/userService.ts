@@ -3,14 +3,20 @@ const API_URL = 'http://localhost:5000/api/user';
 export const userService = {
   async getProfile() {
     const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No hay token de autenticación');
+    }
+
     const response = await fetch(`${API_URL}/profile`, {
       headers: {
-        'Authorization': `Bearer ${token}`
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
       }
     });
 
     if (!response.ok) {
-      throw new Error('Error al obtener el perfil');
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.error || 'Error al obtener el perfil');
     }
 
     return response.json();
@@ -22,6 +28,10 @@ export const userService = {
     password?: string;
   }) {
     const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No hay token de autenticación');
+    }
+
     const response = await fetch(`${API_URL}/profile`, {
       method: 'PUT',
       headers: {
@@ -32,7 +42,8 @@ export const userService = {
     });
 
     if (!response.ok) {
-      throw new Error('Error al actualizar el perfil');
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.error || 'Error al actualizar el perfil');
     }
 
     return response.json();

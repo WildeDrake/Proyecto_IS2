@@ -6,7 +6,6 @@ import ForecastGrid from "../components/ForecastGrid";
 import SearchBar from "../components/SearchBar";
 import WeatherDetails from "../components/WeatherDetails";
 import FavoritesList from "../components/FavoritesList";
-import ErrorMessage from "./ErrorMessage";
 import Loading from "./Loading";
 import { useNavigate } from 'react-router-dom';
 import { fetchWeather, fetchForecast } from "../services/weatherService";
@@ -106,7 +105,6 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
     try {
       const weatherData = await fetchWeather(cityName, countryName);
       setWeather(weatherData);
-      console.log("Pronóstico desde LandingPage:", forecast);
       const forecastData = await fetchForecast(weatherData.name);
       setForecast(forecastData);
       
@@ -133,10 +131,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
       setUserCoords([ubicacion.lat, ubicacion.lon]);
 
       const direccionCompleta = await reverseGeocode(ubicacion.lat, ubicacion.lon);
-      // Extraemos ciudad para buscar clima
       const ciudad = direccionCompleta.split(",")[0].trim();
 
-      // Actualizamos clima con la ciudad detectada
       await handleFetchWeather(ciudad, "");
     } catch (err) {
       setError("No se pudo obtener la ubicación");
@@ -148,7 +144,6 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
 
   return (
     <div className="landing-page">
-      
       {/* Navbar */}
       <nav className="navbar">
         <div className="navbar-brand">
@@ -224,27 +219,25 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
         />
       </div>
       
-      {/* Mostrar error o carga */}
+      {/* Mostrar carga */}
       {loading && <Loading />}
-      {error && <ErrorMessage message={error} />}
 
-      {/* Refrescar */}
-      <div className="location-container center-button">
-        <button
-          onClick={refrescarUbicacion}
-          className="mt-3 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition">
-          🔄 Refrescar ubicación
-        </button>
-        {/* Mostrar error si hay */}
+      <div className="weather-section weather-section-refresh" style={{ marginTop: '0' }}>
+        <div className="center-button" style={{ marginBottom: weather ? '20px' : '0' }}>
+          <button
+            onClick={refrescarUbicacion}
+            className="refresh-location-btn">
+            🔄 Refrescar ubicación
+          </button>
+        </div>
         {error && (
-          <p className="mt-2 text-red-500">{error}</p>
+          <p style={{ marginTop: '5px', color: '#e74c3c', textAlign: 'center', marginBottom: '20px', fontSize: '14px' }}>{error}</p>
         )}
-      </div>
-
-      {/* Sección de detalles del clima (visible solo después de buscar) */}
-      {weather && (
-        <div className="weather-section">
-          <div className="weather-details-header">
+        
+        {/* Sección de detalles del clima (visible solo después de buscar) */}
+        {weather && (
+          <>
+            <div className="weather-details-header">
             <h2>{weather.name}</h2>
             <button onClick={() => addFavorite(weather.name)} className="favorite-button">
               Guardar como favorita ⭐
@@ -287,8 +280,9 @@ const LandingPage: React.FC<LandingPageProps> = ({ onWeatherSearch }) => {
               removeFavorite={removeFavorite}
            />
           </div>
-        </div>
-      )}
+          </>
+        )}
+      </div>
 
 
 

@@ -9,14 +9,15 @@
 }
 
 .modal {
-  background: #fff;
+  background: #ffffff !important;
   border-radius: 10px;
   padding: 32px 32px 24px 32px;
   min-width: 400px;
   max-width: 600px;
-  max-height: 90vh;      /* Limita la altura máxima */
-  overflow-y: auto;      /* Hace el modal scrolleable */
+  max-height: 90vh;
+  overflow-y: auto;
   box-shadow: 0 2px 24px rgba(0,0,0,0.18);
+  color: #2c3e50 !important;
 }
 
 input[type="text"],
@@ -29,11 +30,13 @@ textarea {
   font-family: inherit;
   box-sizing: border-box;
   resize: vertical;
+  background-color: #ffffff !important;
+  color: #2c3e50 !important;
 }
 
 .form-hint {
   font-size: 12px;
-  color: #666;
+  color: #666 !important;
   margin-top: 4px;
 }
 
@@ -53,7 +56,11 @@ textarea {
   margin-bottom: 6px;
   display: flex;
   align-items: center;
-  gap: 6px; /* Espacio entre el checkbox y el texto */
+  gap: 6px;
+  background-color: #ffffff !important;
+  color: #2c3e50 !important;
+  padding: 4px;
+  border-radius: 4px;
 }
 
 .checkbox-label {
@@ -61,6 +68,8 @@ textarea {
   align-items: center;
   gap: 6px;
   margin-bottom: 6px;
+  color: #2c3e50 !important;
+  background-color: #ffffff !important;
 }
 
 .slider-container {
@@ -130,5 +139,114 @@ textarea {
   margin-top: 18px;
   display: flex;
   gap: 10px;
+}
+
+/* Forzar colores consistentes para todos los elementos */
+.modal h3 {
+  color: #34495e !important;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+.modal label {
+  color: #2c3e50 !important;
+  font-weight: 500;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.modal input[type="checkbox"] {
+  background-color: #ffffff !important;
+  border: 2px solid #ccc !important;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  position: relative;
+  cursor: pointer;
+}
+
+.modal input[type="checkbox"]:checked {
+  background-color: #3498db !important;
+  border-color: #3498db !important;
+}
+
+.modal input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.modal button {
+  background-color: #3498db;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.modal button:hover {
+  background-color: #2980b9;
+}
+
+.advanced-btn {
+  background: #e7e7e7 !important;
+  color: #2c3e50 !important;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.advanced-btn:hover {
+  background: #d4d4d4 !important;
+}
+
+.advanced-params {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  background-color: #ffffff !important;
+}
+
+/* Asegurar visibilidad en modo oscuro */
+@media (prefers-color-scheme: dark) {
+  .modal {
+    background: #ffffff !important;
+    color: #2c3e50 !important;
+  }
+  
+  .modal h3 {
+    color: #34495e !important;
+  }
+  
+  .modal label,
+  .clima-checkbox,
+  .checkbox-label {
+    color: #2c3e50 !important;
+  }
+  
+  .modal input[type="text"],
+  .modal textarea {
+    background-color: #ffffff !important;
+    color: #2c3e50 !important;
+    border: 1px solid #ccc;
+  }
+  
+  .advanced-params {
+    background-color: #ffffff !important;
+  }
 }
 

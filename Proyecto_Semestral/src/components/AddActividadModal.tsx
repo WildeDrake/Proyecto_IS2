@@ -1,4 +1,4 @@
-import React, { useState, useEffect, act } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Range, getTrackBackground } from 'react-range';
 import '../styles/AddActividadModal.css';
 
@@ -10,18 +10,20 @@ interface AddActividadModalProps {
 }
 
 const CLIMAS = [
-  { value: 'Clear', label: 'Despejado' },
-  { value: 'Clouds', label: 'Nublado' },
-  { value: 'Rain', label: 'Lluvia' },
-  { value: 'Snow', label: 'Nieve' },
-  { value: 'Thunderstorm', label: 'Tormenta eléctrica' },
-  { value: 'Drizzle', label: 'Llovizna' },
-  { value: 'Mist', label: 'Neblina' },
-  { value: 'Haze', label: 'Aire Brumoso' },
-  { value: 'Dust', label: 'Polvo en el aire' },
-  { value: 'Fog', label: 'Niebla' },
-  { value: 'Ash', label: 'Ceniza volcánica' },
-  { value: 'Squall', label: 'Ráfagas de viento' },
+  { value: 800, label: 'Despejado' },
+  { value: 801, label: 'Pocas nubes' },
+  { value: 802, label: 'Nubes dispersas' },
+  { value: 804, label: 'Muy nublado' },
+  { value: 500, label: 'Lluvia ligera' },
+  { value: 501, label: 'Lluvia moderada' },
+  { value: 502, label: 'Lluvia intensa' },
+  { value: 600, label: 'Nieve ligera' },
+  { value: 601, label: 'Nieve' },
+  { value: 200, label: 'Tormenta eléctrica' },
+  { value: 300, label: 'Llovizna' },
+  { value: 741, label: 'Niebla' },
+  { value: 721, label: 'Aire brumoso' },
+  { value: 771, label: 'Ráfagas de viento' },
 ];
 
 const TEMP_MIN = -30;
@@ -44,11 +46,8 @@ const AddActividadModal: React.FC<AddActividadModalProps> = ({ onClose, onAdd, i
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [requiereLluvia, setRequiereLluvia] = useState(false);
   const [estado, setEstado] = useState(true);
-  const [visMinKm, setVisMinKm] = useState(0);
+  const [visMinKm, setVisMinKm] = useState(1);
 
-
-
-  // Cargar datos cuando initialData cambia para editar alguna
   useEffect(() => {
   if (initialData) {
     setActividadId(initialData.id ?? null);
@@ -56,7 +55,7 @@ const AddActividadModal: React.FC<AddActividadModalProps> = ({ onClose, onAdd, i
     setDescription(initialData.descripcion || '');
     setRequiereLluvia(initialData.requiere_sin_lluvia ?? false);
     setEstado(initialData?.estado ?? true);
-    setVisMinKm(typeof initialData.vis_min_km === 'number' ? initialData.vis_min_km : 10);
+    setVisMinKm(typeof initialData.vis_min_km === 'number' ? initialData.vis_min_km : 0);
     setClimas(Array.isArray(initialData.climas_permitidos) ? initialData.climas_permitidos : []);
     setTempRange([
       typeof initialData.temp_min === 'number' ? initialData.temp_min : TEMP_MIN,
@@ -92,9 +91,9 @@ const AddActividadModal: React.FC<AddActividadModalProps> = ({ onClose, onAdd, i
 }, [initialData]);
 
 
-  const handleClimaChange = (climaIdx: number) => {
+  const handleClimaChange = (climaValue: number) => {
     setClimas((prev) =>
-      prev.includes(climaIdx) ? prev.filter((c) => c !== climaIdx) : [...prev, climaIdx]
+      prev.includes(climaValue) ? prev.filter((c) => c !== climaValue) : [...prev, climaValue]
     );
     setClimaError(false);
   };
@@ -120,10 +119,10 @@ const AddActividadModal: React.FC<AddActividadModalProps> = ({ onClose, onAdd, i
         viento_max: showAdvanced ? windRange[1] : 30,
         humedad_min: humedadRange[0],
         humedad_max: humedadRange[1],
-        vis_min_km: visMinKm,
-        requiere_sin_lluvia: requiereLluvia,
-        descripcion: descripcion.trim(),
-        estado: estado
+        vis_min_km: visMinKm || 1,
+        requiere_sin_lluvia: Boolean(requiereLluvia),
+        descripcion: descripcion.trim() || "",
+        estado: Boolean(estado)
       };
       onAdd(actividad);
       onClose();
@@ -159,12 +158,12 @@ const AddActividadModal: React.FC<AddActividadModalProps> = ({ onClose, onAdd, i
           <div className="form-group">
             <label>Climas permitidos</label>
             <div className="climas-list">
-              {CLIMAS.map((clima, idx) => (
+              {CLIMAS.map((clima) => (
                 <label key={clima.value} className="clima-checkbox">
                   <input
                     type="checkbox"
-                    checked={climas.includes(idx)}
-                    onChange={() => handleClimaChange(idx)}
+                    checked={climas.includes(clima.value)}
+                    onChange={() => handleClimaChange(clima.value)}
                   />
                   {clima.label}
                 </label>
@@ -202,7 +201,7 @@ const AddActividadModal: React.FC<AddActividadModalProps> = ({ onClose, onAdd, i
                     {children}
                   </div>
                 )}
-                renderThumb={({ index, props, value }) => (
+                renderThumb={({ props, value }) => (
                   <div
                     {...props}
                     className="slider-thumb"
@@ -282,7 +281,7 @@ const AddActividadModal: React.FC<AddActividadModalProps> = ({ onClose, onAdd, i
                         {children}
                       </div>
                     )}
-                    renderThumb={({ index, props, value }) => (
+                    renderThumb={({ props, value }) => (
                       <div
                         {...props}
                         className="slider-thumb"
@@ -331,7 +330,7 @@ const AddActividadModal: React.FC<AddActividadModalProps> = ({ onClose, onAdd, i
                         {children}
                       </div>
                     )}
-                    renderThumb={({ index, props, value }) => (
+                    renderThumb={({ props, value }) => (
                       <div
                         {...props}
                         className="slider-thumb"

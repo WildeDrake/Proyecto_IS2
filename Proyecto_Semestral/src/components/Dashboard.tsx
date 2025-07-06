@@ -6,12 +6,10 @@ import { authService } from '../services/authService';
 import '../styles/Dashboard.css';
 import AddActividadModal from './AddActividadModal';
 
-
 interface UserProfile {
   name: string;
   email: string;
 }
-
 
 const Dashboard: React.FC = () => {
   const [activeSection, setActiveSection] = useState('profile');
@@ -39,12 +37,12 @@ const Dashboard: React.FC = () => {
     window.location.reload();
   };
   useEffect(() => {
-    if (!localStorage.getItem('token')) {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/');
     }
   }, [navigate]);
 
-  
-  // UseEffect para borrar mensajes dentro de 2 segs.
   useEffect(() => {
     if (error || message) {
       const timer = setTimeout(() => {
@@ -55,22 +53,29 @@ const Dashboard: React.FC = () => {
       return () => clearTimeout(timer);
     }
   }, [error, message]);
-  
-  // UseEffect para carga de datos.
   useEffect(() => {
     setError(null);
     setMessage(null);
     const cargarDatos = async () => {
       try {
+        setLoading(true);
+        setError(null);
+        
         const userData = await userService.getProfile();
         const data = await getUserInterests();
 
         setProfile(userData);
         setEditedProfile(userData);
         setActividades(data);
-        setLoading(false);
-      } catch (err) {
-        setError('Error al cargar los datos');
+      } catch (err: any) {
+        setError(err.message || 'Error al cargar los datos del perfil');
+        
+        if (err.message.includes('autenticación') || err.message.includes('token')) {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          navigate('/');
+        }
+      } finally {
         setLoading(false);
       }
     };
@@ -84,18 +89,21 @@ const Dashboard: React.FC = () => {
       return;
     }
   try {
+    setError(null);
+    setMessage(null);
+    
     const updateData = {
       ...editedProfile,
       password: password || undefined
     };
+    
     await userService.updateProfile(updateData);
     setProfile(editedProfile);
     setEditingProfile(false);
     setPassword('');
-    setError(null);
     setMessage('Perfil actualizado correctamente');
-  } catch (err) {
-    setError('Error al actualizar el perfil');
+  } catch (err: any) {
+    setError(err.message || 'Error al actualizar el perfil');
   }
 };
 
