@@ -52,7 +52,7 @@ const AddActividadModal: React.FC<AddActividadModalProps> = ({ onClose, onAdd, i
   if (initialData) {
     setActividadId(initialData.id ?? null);
     setName(initialData.name || '');
-    setDescription('');
+    setDescription(initialData.descripcion || '');
     setRequiereLluvia(initialData.requiere_sin_lluvia ?? false);
     setEstado(initialData?.estado ?? true);
     setVisMinKm(typeof initialData.vis_min_km === 'number' ? initialData.vis_min_km : 0);
@@ -112,6 +112,7 @@ const AddActividadModal: React.FC<AddActividadModalProps> = ({ onClose, onAdd, i
       const actividad = {
         id: actividadId ?? undefined,
         name: name.trim(),
+        descripcion: descripcion.trim(),
         climas_permitidos: climas,
         temp_min: tempRange[0],
         temp_max: tempRange[1],
@@ -144,7 +145,6 @@ const AddActividadModal: React.FC<AddActividadModalProps> = ({ onClose, onAdd, i
               required
             />
           </div>
-          {/* Campo descripción temporalmente deshabilitado - falta columna en BD
           <div className="form-group">
             <label> Descripción / Notas </label>
             <textarea
@@ -155,7 +155,6 @@ const AddActividadModal: React.FC<AddActividadModalProps> = ({ onClose, onAdd, i
             rows={3}
             />
           </div>
-          */}
           <div className="form-group">
             <label>Climas permitidos</label>
             <div className="climas-list">

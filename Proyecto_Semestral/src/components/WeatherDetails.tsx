@@ -141,19 +141,21 @@ const WeatherDetails: React.FC<{ weather: WeatherData }> = ({ weather }) => {
                   <>
                     {baseRecommendation && <h4>{baseRecommendation.text}</h4>}
                     <div className="actividad-grid">
-                      {personalizedActivities.map((activity, index) => (
-                        <div className="actividad-card" key={activity.id}>
-                          <span className="tooltip">
-                            <div>Actividad personalizada según tus intereses</div>
-                            <div><strong>Razón:</strong> {activity.reason}</div>
-                            {activity.weatherFactors.length > 0 && (
-                              <div><strong>Factores:</strong> {activity.weatherFactors.map(f => getFactorTranslation(f)).join(', ')}</div>
-                            )}
-                          </span>
-                          <strong>{activity.text.split(' - ')[0]}</strong>
-                        </div>
-                      ))}
-                    </div>
+
+                    {personalizedActivities.map((activity, index) => (
+                      <div className="actividad-card" key={activity.id}>
+                        <span className="tooltip">
+                          <div><strong>Descripción:</strong> {activity.text.split(' - ')[1] || 'Sin descripción disponible'}</div>
+                          <div><strong>Razón:</strong> {activity.reason}</div>
+                          {activity.weatherFactors.length > 0 && (
+                            <div><strong>Factores:</strong> {activity.weatherFactors.map(f => getFactorTranslation(f)).join(', ')}</div>
+                          )}
+                        </span>
+                        <strong>{activity.text.split(' - ')[0]}</strong>
+                      </div>
+                    ))}
+                  </div>
+
                   </>
                 );
               } else {
@@ -163,61 +165,63 @@ const WeatherDetails: React.FC<{ weather: WeatherData }> = ({ weather }) => {
           </div>
         )}
 
-        {/* Actividades Personalizadas desde Ubicaciones Favoritas (agrupadas) */}
         {favoriteRecommendations.length > 0 && (
-          <div className="recommendations-personalized">
-            <h3>🌍 Actividades desde tus Ubicaciones Favoritas</h3>
-            {(() => {
-              const actividadMap = new Map<string, {
-                razones: string[],
-                ubicaciones: string[],
-                factores: Set<string>
-              }>();
+  <div className="recommendations-personalized">
+    <h3>🌍 Actividades desde tus Ubicaciones Favoritas</h3>
+    {(() => {
+      const actividadMap = new Map<string, {
+        descripcion: string,
+        ubicaciones: string[],
+        factores: Set<string>
+      }>();
 
-              // Recolectar y agrupar actividades por texto base
-              favoriteRecommendations.forEach(({ city, recommendations }) => {
-                const personalizadas = recommendations.recommendations.filter(r => r.type === 'personalized');
+      // Recolectar y agrupar actividades por texto base
+      favoriteRecommendations.forEach(({ city, recommendations }) => {
+        const personalizadas = recommendations.recommendations.filter(r => r.type === 'personalized');
 
-                personalizadas.forEach((activity) => {
-                  const nombreBase = activity.text.split(' - ')[0];
-                  if (!actividadMap.has(nombreBase)) {
-                    actividadMap.set(nombreBase, {
-                      razones: [activity.reason],
-                      ubicaciones: [city],
-                      factores: new Set(activity.weatherFactors)
-                    });
-                  } else {
-                    const entry = actividadMap.get(nombreBase)!;
-                    entry.razones.push(activity.reason);
-                    entry.ubicaciones.push(city);
-                    activity.weatherFactors.forEach(f => entry.factores.add(f));
-                  }
-                });
-              });
+        personalizadas.forEach((activity) => {
+          const nombreBase = activity.text.split(' - ')[0];
+          const descripcion = activity.text.split(' - ')[1] || 'Sin descripción disponible';
 
-              if (actividadMap.size === 0) {
-                return <p>No hay actividades personalizadas para tus ubicaciones favoritas.</p>;
-              }
+          if (!actividadMap.has(nombreBase)) {
+            actividadMap.set(nombreBase, {
+              descripcion,
+              ubicaciones: [city],
+              factores: new Set(activity.weatherFactors)
+            });
+          } else {
+            const entry = actividadMap.get(nombreBase)!;
+            if (!entry.ubicaciones.includes(city)) entry.ubicaciones.push(city);
+            activity.weatherFactors.forEach(f => entry.factores.add(f));
+          }
+        });
+      });
 
-              return (
-                <div className="actividad-grid">
-                  {[...actividadMap.entries()].map(([nombreBase, data]) => (
-                    <div key={nombreBase} className="actividad-card">
-                      <span className="tooltip">
-                        <div><strong>Descripción:</strong> {data.razones.join('; ')}</div>
-                        <div><strong>Ubicaciones:</strong> {data.ubicaciones.join(', ')}</div>
-                        {data.factores.size > 0 && (
-                          <div><strong>Factores:</strong> {[...data.factores].map(getFactorTranslation).join(', ')}</div>
-                        )}
-                      </span>
-                      <strong>{nombreBase}</strong>
-                    </div>
-                  ))}
-                </div>
-              );
-            })()}
-          </div>
-        )}
+      if (actividadMap.size === 0) {
+        return <p>No hay actividades personalizadas para tus ubicaciones favoritas.</p>;
+      }
+
+      return (
+        <div className="actividad-grid">
+          {[...actividadMap.entries()].map(([nombreBase, data]) => (
+            <div key={nombreBase} className="actividad-card">
+              <span className="tooltip">
+                <div><strong>Descripción:</strong> {data.descripcion}</div>
+                <div><strong>Ubicaciones:</strong> {data.ubicaciones.join(', ')}</div>
+                {data.factores.size > 0 && (
+                  <div><strong>Factores:</strong> {[...data.factores].map(getFactorTranslation).join(', ')}</div>
+                )}
+              </span>
+              <strong>{nombreBase}</strong>
+            </div>
+          ))}
+        </div>
+      );
+    })()}
+  </div>
+)}
+
+
 
 
         {/* Recomendaciones Generales */}
