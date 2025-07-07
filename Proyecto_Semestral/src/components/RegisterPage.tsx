@@ -81,11 +81,22 @@ const RegisterPage = () => {
       if (loginResult.token) {
         localStorage.setItem('token', loginResult.token);
 
-        for (const actividad of interesesElegidos) {
-          await createInterest({
+        await Promise.all(interesesElegidos.map(actividad => 
+          createInterest({
             name: actividad,
-          });
-        }
+            climas_permitidos: [800],
+            temp_min: 0,
+            temp_max: 30,
+            viento_min: 0,
+            viento_max: 20,
+            humedad_min: 0,
+            humedad_max: 100,
+            vis_min_km: 0,
+            requiere_sin_lluvia: false,
+            descripcion: '',
+            estado: true
+          })
+        ));
 
         // Redirigir al perfil del usuario
         navigate(`/user/${loginResult.user.id}`);
