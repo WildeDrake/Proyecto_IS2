@@ -10,21 +10,20 @@ interface AddActividadModalProps {
 }
 
 const CLIMAS = [
-  { value: 800, label: 'Despejado' },
-  { value: 801, label: 'Pocas nubes' },
-  { value: 802, label: 'Nubes dispersas' },
-  { value: 804, label: 'Muy nublado' },
-  { value: 500, label: 'Lluvia ligera' },
-  { value: 501, label: 'Lluvia moderada' },
-  { value: 502, label: 'Lluvia intensa' },
-  { value: 600, label: 'Nieve ligera' },
-  { value: 601, label: 'Nieve' },
-  { value: 200, label: 'Tormenta eléctrica' },
-  { value: 300, label: 'Llovizna' },
-  { value: 741, label: 'Niebla' },
-  { value: 721, label: 'Aire brumoso' },
-  { value: 771, label: 'Ráfagas de viento' },
+  { value: 0, label: 'Despejado' },
+  { value: 1, label: 'Nubes' },
+  { value: 2, label: 'Lluvia' },
+  { value: 3, label: 'Nieve' },
+  { value: 4, label: 'Tormenta eléctrica' },
+  { value: 5, label: 'Llovizna' },
+  { value: 6, label: 'Niebla' },
+  { value: 7, label: 'Calina' },
+  { value: 8, label: 'Polvo' },
+  { value: 9, label: 'Niebla densa' },
+  { value: 10, label: 'Ceniza' },
+  { value: 11, label: 'Ráfagas' },
 ];
+
 
 const TEMP_MIN = -30;
 const TEMP_MAX = 60;

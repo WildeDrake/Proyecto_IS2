@@ -84,7 +84,7 @@ const RegisterPage = () => {
         await Promise.all(interesesElegidos.map(actividad => 
           createInterest({
             name: actividad,
-            climas_permitidos: [800],
+            climas_permitidos: [0,1],
             temp_min: 0,
             temp_max: 30,
             viento_min: 0,
