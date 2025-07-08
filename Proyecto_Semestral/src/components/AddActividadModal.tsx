@@ -17,7 +17,7 @@ const CLIMAS = [
   { value: 4, label: 'Tormenta eléctrica' },
   { value: 5, label: 'Llovizna' },
   { value: 6, label: 'Niebla' },
-  { value: 7, label: 'Calina' },
+  { value: 7, label: 'Humo' },
   { value: 8, label: 'Polvo' },
   { value: 9, label: 'Niebla densa' },
   { value: 10, label: 'Ceniza' },

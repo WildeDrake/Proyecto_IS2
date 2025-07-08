@@ -23,9 +23,7 @@ export async function getActRecomendadas(condiciones: any) {
   const actividadesValidas = actividades.filter((act: any) =>
     cumpleCondiciones(act, condiciones, climaId)
   );
-
-  console.log('🎒 Actividades obtenidas del backend:', actividades);
-  console.log('🎒 Actividades obtenidas del backend:', actividadesValidas);
+  
   return actividadesValidas;
 }
 
