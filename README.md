@@ -1,11 +1,11 @@
 # Proyecto Ingenieria de Software 2
 
 #### Integrantes:
-- Gaspar Francisco Jimenez Cabezas.
-- Franco Antonio Ponce Chacana.
-- Cristobal Hernan Solar Arias.
-- Ana Maria Vargas Miño.
-- Diego Joaquin Andres Venegas Anabalon.
+- Gaspar Jimenez.
+- Franco Ponce.
+- Cristobal Solar.
+- Ana Vargas.
+- Diego Venegas.
 
 ## Requerimientos:
 PgAdmin y PostgreSQL 17.
